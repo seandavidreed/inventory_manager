@@ -1,0 +1,28 @@
+{% extends "inventory/layout.html" %}
+
+{% block title %}
+    Login
+{% endblock %}
+
+{% block main %}
+    <div class="row h-75 justify-content-center align-items-center">
+        <div class="col-md-4">
+            <form action="/login/" method="post">
+                <div class="form-floating mb-3">
+                    <input autocomplete="off" autofocus="off" type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                    <label for="floatingInput">Email address</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <input autocomplete="off" autofocus="off" type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                    <label for="floatingPassword">Password</label>
+                </div>
+                <div class="d-grid mb-3 input-group">
+                    <button class="btn btn-outline-secondary" type="submit" value="Login">Login</button>
+                </div>
+                <div class="d-grid mb-3 input-group">
+                    <button class="btn btn-outline-info" type="submit" value="Register">Register</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
