@@ -1,8 +1,14 @@
 from django.shortcuts import render
 
+from .models import Item
+
 # Create your views here.
 def index(request):
-    return render(request, 'inventory/index.html')
+    item_list = Item.objects.all()
+    context = {
+        'item_list': item_list,
+    }
+    return render(request, 'inventory/index.html', context)
 
 def login(request):
     return render(request, 'inventory/login.html')
