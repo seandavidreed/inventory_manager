@@ -1,0 +1,10 @@
+{% extends "inventory/layout.html" %}
+
+{% block title %}
+    Logged Out
+{% endblock %}
+
+{% block main %}
+    <p>You are logged out.</p>
+    <a href="{% url 'login' %}">Click here to login.</a>
+{% endblock %}
