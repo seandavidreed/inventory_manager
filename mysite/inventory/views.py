@@ -5,6 +5,8 @@ from .models import Item
 # Create your views here.
 def index(request):
     item_list = Item.objects.all()
+    for item in item_list:
+        setattr(item, 'difference', item.par - item.current_qty)
     context = {
         'item_list': item_list,
     }
