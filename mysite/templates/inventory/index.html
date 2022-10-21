@@ -20,10 +20,10 @@
                     </thead>
                     {% for item in item_list %}
                         <tr>
-                            <td>{{ item.brand }}</td>
-                            <td>{{ item.unit }}</td>
-                            <td>{{ item.par }}</td>
-                            <td>
+                            <td class="align-middle">{{ item.brand }}</td>
+                            <td class="align-middle">{{ item.unit }}</td>
+                            <td class="align-middle">{{ item.par }}</td>
+                            <td class="align-middle">
                                 <div class="input-group">
                                     <input id="{{ item.unit }}" type="text" class="form-control" value="{{ item.difference }}" aria-label="Number of items to order">
                                     <button class="btn btn-danger" type="button" onclick="increment('{{ item.unit }}', 'd')">-</button>
