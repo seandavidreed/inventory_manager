@@ -1,4 +1,8 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.http import FileResponse
+import io
+from reportlab.pdfgen import canvas
 from django.http import HttpResponseRedirect
 import datetime
 
@@ -6,6 +10,7 @@ import datetime
 from .models import Supplier, Item, Order
 
 # Create your views here.
+@login_required
 def shed(request):
     if request.method == "POST":
         print(request.POST)
@@ -25,6 +30,8 @@ def shed(request):
     }
     return render(request, 'inventory/shed.html', context)
 
+
+@login_required
 def shop(request):
     if request.method == "POST":
         print(request.POST)
@@ -44,8 +51,42 @@ def shop(request):
     }
     return render(request, 'inventory/shop.html', context)
 
+
+@login_required
+def history(request):
+    order_list = Order.objects.all().values('date').distinct()
+    context = {
+        'order_list': order_list,
+    }
+    return render(request, 'inventory/order-history.html', context)
+
+
+@login_required
+def order(request, order_date):
+    orders = Order.objects.filter(date=order_date)
+    context = {
+        'orders': orders,
+    }
+    return render(request, 'inventory/order.html', context)
+
+@login_required
+def orderfile(request):
+    buffer = io.BytesIO()
+
+    p = canvas.Canvas(buffer)
+
+    p.drawString(100, 100, "Hello, world.")
+
+    p.showPage()
+    p.save()
+
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename='order.pdf')
+
+
 def login(request):
     return render(request, 'inventory/login.html')
+
 
 def dashboard(request):
     return render(request, 'inventory/dashboard.html')

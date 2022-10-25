@@ -27,4 +27,4 @@ class Order(models.Model):
     order_qty = models.IntegerField(default=0, help_text='The amount of a given item to be ordered')
 
     def __str__(self):
-        return self.date
+        return str(self.date)

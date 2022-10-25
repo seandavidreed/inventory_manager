@@ -1,0 +1,25 @@
+{% extends 'inventory/layout.html' %}
+
+{% block title %}
+    Order
+{% endblock %}
+
+{% block main %}
+    <div class="row justify-content-center py-5">
+        <div class="col-md-8">
+            <p><a class="nav-link" href="{% url 'inventory:orderfile' %}">Download as PDF</a></p>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                    </tr>
+                </thead>
+                {% for order in orders %}
+                    <tr>
+                        <td class="align-middle">{{ order.item }}</td>
+                        <td class="align-middle">{{ order.order_qty }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+{% endblock %}

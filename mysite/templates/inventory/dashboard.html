@@ -6,19 +6,19 @@
 
 {% block main %}
         <div class="row justify-content-center py-5">
-        {% if user.is_authenticated %}
+            {% if user.is_authenticated %}
             <div class="col-md-6">
                 <div class="d-grid gap-2 mb-3 input-group">
                     <a href="{% url 'inventory:shed' %}"><button class="btn btn-secondary btn-lg">Shed</button></a>
                     <a href="{% url 'inventory:shop' %}"><button class="btn btn-secondary btn-lg">Shop</button></a>
                 </div>
             </div>
-        {% else %}
-            {% load static %}
+            {% else %}
             <div class="col-md-8">
+                {% load static %}
                 <img src="{% static 'images/logo.png' %}" style="width: 40%; height: auto;">  
                 <img src="{% static 'images/logo_text5.png' %}" style="width: 60%; height: auto;">
             </div>
-        {% endif %}
+            {% endif %}
         </div>
 {% endblock %}
