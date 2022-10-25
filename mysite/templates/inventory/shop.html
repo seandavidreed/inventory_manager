@@ -1,20 +1,19 @@
 {% extends "inventory/layout.html" %}
 
 {% block title %}
-    Inventory
+    Shop
 {% endblock %}
 
 {% block main %}
     <div class="row justify-content-center py-5">
         {% if user.is_authenticated %}
         <div class="col-md-8">
-            <form>
                 <table class="table table-striped">
                     <thead>
                         <tr>
                             <th>Brand</th>
                             <th>Unit</th>
-                            <th>Par</th>
+                            <th>Quota</th>
                             <th>Order</th>
                         </tr>
                     </thead>
@@ -22,19 +21,22 @@
                         <tr>
                             <td class="align-middle">{{ item.brand }}</td>
                             <td class="align-middle">{{ item.unit }}</td>
-                            <td class="align-middle">{{ item.par }}</td>
+                            <td class="align-middle">{{ item.quota }}</td>
                             <td class="align-middle">
-                                <div class="input-group">
-                                    <input id="{{ item.unit }}" type="text" class="form-control" value="{{ item.difference }}" aria-label="Number of items to order">
-                                    <button class="btn btn-danger" type="button" onclick="increment('{{ item.unit }}', 'd')">-</button>
-                                    <button class="btn btn-success" type="button" onclick="increment('{{ item.unit }}', 'i')">+</button>
-                                </div>
+                                <form action="" method="post">
+                                {% csrf_token %}
+                                    <div class="input-group">
+                                        <input id="{{ item.id }}" style="width: 30px;" type="text" name="input" class="form-control" value="0" aria-label="Number of items to order">
+                                        <input type="hidden" name="id" value="{{ item.id }}">
+                                        <button class="btn btn-danger px-3" type="button" onclick="increment('{{ item.id }}', 'd')">-</button>
+                                        <button class="btn btn-success" type="button" onclick="increment('{{ item.id }}', 'i')">+</button>
+                                        <button type="submit" class="btn btn-dark">Submit</button>
+                                    </div>
+                                </form>
                             </td>
                         </tr>
                     {% endfor %}
                 </table>
-                <button type="submit" class="btn btn-dark">Submit</button>
-            </form>
         </div>
         {% else %}
             {% load static %}
