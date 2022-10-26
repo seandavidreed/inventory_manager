@@ -12,62 +12,39 @@ from .models import Supplier, Item, Order
 # Create your views here.
 @login_required
 def shed(request):
-    if request.method == "POST":
-        print(request.POST)
-        item_id = int(request.POST['id'])
-        item_value = request.POST['input']
-        item = Item.objects.get(id=item_id)
-        order = Order(
-            date=datetime.datetime.now(),
-            item=item,
-            order_qty=item_value
-        )
-        order.save() 
-
     item_list = Item.objects.filter(storage__contains='A')
-    context = {
-        'item_list': item_list,
-    }
-    return render(request, 'inventory/shed.html', context)
+    if request.method == "POST":
+        for item in item_list:
+            item_value = request.POST[str(item.id)]
+            order, was_created = Order.objects.get_or_create(date=datetime.datetime.now(), item_id=item.id)
+            order.order_qty = item_value
+            order.save() 
+    return render(request, 'inventory/shed.html', {'item_list': item_list})
 
 
 @login_required
 def shop(request):
-    if request.method == "POST":
-        print(request.POST)
-        item_id = int(request.POST['id'])
-        item_value = request.POST['input']
-        item = Item.objects.get(id=item_id)
-        order = Order(
-            date=datetime.datetime.now(),
-            item=item,
-            order_qty=item_value
-        )
-        order.save() 
-
     item_list = Item.objects.filter(storage__contains='B')
-    context = {
-        'item_list': item_list,
-    }
-    return render(request, 'inventory/shop.html', context)
+    if request.method == "POST":
+        for item in item_list:
+            item_value = request.POST[str(item.id)]
+            order, was_created = Order.objects.get_or_create(date=datetime.datetime.now(), item_id=item.id)
+            order.order_qty = item_value
+            order.save() 
+    return render(request, 'inventory/shop.html', {'item_list': item_list})
 
 
 @login_required
 def history(request):
-    order_list = Order.objects.all().values('date').distinct()
-    context = {
-        'order_list': order_list,
-    }
-    return render(request, 'inventory/order-history.html', context)
+    order_list = Order.objects.all().values('date').distinct().order_by('-date')
+    return render(request, 'inventory/order-history.html', {'order_list': order_list})
 
 
 @login_required
 def order(request, order_date):
     orders = Order.objects.filter(date=order_date)
-    context = {
-        'orders': orders,
-    }
-    return render(request, 'inventory/order.html', context)
+    return render(request, 'inventory/order.html', {'orders': orders})
+
 
 @login_required
 def orderfile(request):
