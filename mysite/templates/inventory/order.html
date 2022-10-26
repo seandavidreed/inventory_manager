@@ -7,7 +7,6 @@
 {% block main %}
     <div class="row justify-content-center py-5">
         <div class="col-md-8">
-            <p><a class="nav-link" href="{% url 'inventory:orderfile' %}">Download as PDF</a></p>
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -22,4 +21,9 @@
                     </tr>
                 {% endfor %}
             </table>
+        </div>
+        <div class="col-md-8">
+            <a class="nav-link" href="{% url 'inventory:orderfile' order_date %}">Download as PDF</a>
+        </div>
+    </div>
 {% endblock %}

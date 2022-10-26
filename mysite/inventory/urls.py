@@ -7,8 +7,7 @@ urlpatterns = [
     path('login/', views.login, name='login'),
     path('order-history/', views.history, name='history'),
     path('order-history/<str:order_date>/', views.order, name='order'),
-    path('pdf/', views.orderfile, name='orderfile'),
-    path('shed/', views.shed, name='shed'),
-    path('shop/', views.shop, name='shop'),
-    # path('temp/', views.temp, name='temp'),
+    path('pdf/<str:order_date>', views.orderfile, name='orderfile'),
+    path('shed/', views.take_inventory, name='shed'),
+    path('shop/', views.take_inventory, name='shop'),
 ]
