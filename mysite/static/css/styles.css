@@ -1,0 +1,19 @@
+body {
+    background-image: url("/static/images/gradient_bg2.jpg");
+    background-position: cover;
+    background-repeat: no-repeat;
+    height: 100vh;
+}
+
+.card {
+    opacity: 80%;
+}
+
+h1 {
+    color: black;
+    font-size: 60px;
+}
+
+input, textarea {
+    opacity: 80%;
+}

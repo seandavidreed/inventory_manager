@@ -1,0 +1,13 @@
+# Django #
+# Fetched from https://djangowaves.com/tips-tricks/gitignore-for-a-django-project/ #
+*.log
+*.pot
+*.pyc
+__pycache__/
+# omitted db.sqlite3 since I want to keep it populated
+media
+
+# Backup files #
+*.bak
+
+
