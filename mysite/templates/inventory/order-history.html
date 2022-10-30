@@ -15,7 +15,7 @@
                 </thead>
                 {% for order in order_list %}
                     <tr>
-                        <td class="align-middle"><a class="nav-link" href="{% url 'inventory:order' order.date %}">{{ order.date }}</a></td>
+                        <td class="align-middle"><a href="{% url 'inventory:order' order.date %}">{{ order.date }}</a></td>
                     </tr>
                 {% endfor %}
             </table>

@@ -1,7 +1,5 @@
 body {
-    background-image: url("/static/images/gradient_bg2.jpg");
-    background-position: cover;
-    background-repeat: no-repeat;
+    background: black;
     height: 100vh;
 }
 
@@ -17,3 +15,18 @@ h1 {
 input, textarea {
     opacity: 80%;
 }
+
+th, td {
+    color: white;
+}
+
+a {
+    text-decoration: none;
+    touch-action: manipulation;
+    color: white;
+}
+
+button {
+    touch-action: manipulation;
+}
+
