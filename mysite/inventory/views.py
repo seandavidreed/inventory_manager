@@ -42,6 +42,7 @@ def order(request, order_date):
 
 @login_required
 def orderfile(request, order_date):
+    # Fetch database objects by date
     things = Order.objects.filter(date=order_date)
 
     # Create Bytestream buffer
@@ -54,14 +55,39 @@ def orderfile(request, order_date):
     textob = p.beginText()
     textob.setTextOrigin(inch, inch)
 
-    textob.setFont("Helvetica", 20)
-    textob.textLine("Woodland Espresso Order History")
-    textob.setFont("Helvetica", 14)
-    textob.textLine(order_date)
+    # Create Letterhead
+    textob.setFont("Courier", 18)
+    textob.textLine("Woodland Espresso")
+    p.setLineWidth(0.05*inch)
+    p.line(1*inch, 1.1*inch, 7.5*inch, 1.1*inch)
 
+    # Display order date
+    textob.setFont("Courier", 12)
+    textob.textLine("Order Placed: " + order_date)
+    textob.textLine()
+
+    # Table Headers (currently hard-coded: probably should change)
+    textob.setFont("Courier-Bold", 12)
+    textob.textOut("Item")
+    textob.moveCursor(5*inch, 0)
+    textob.textOut("Order Qty")
+    textob.moveCursor(-5*inch, 0)
+    textob.textLine()
+
+    # Populate document with data from database
+    textob.setFont("Courier", 12)
     for thing in things:
-        textob.textLine(str(thing.item) + str(thing.order_qty))
+        textob.textOut(str(thing.item))
+        textob.moveCursor(5*inch, 0)
+        textob.textOut(str(thing.order_qty))
+        textob.moveCursor(-5*inch, 0)
+        textob.textLine()
+        if textob.getCursor()[1] >= 712:
+            p.drawText(textob)
+            p.showPage()
+            textob.setTextOrigin(inch, inch)
 
+    # Render PDF document
     p.drawText(textob)
     p.showPage()
     p.save()
