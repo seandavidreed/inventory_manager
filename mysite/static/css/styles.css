@@ -6,7 +6,7 @@ body {
 .card {
     opacity: 80%;
 }
-
+  
 h1 {
     color: black;
     font-size: 60px;
@@ -22,8 +22,6 @@ th, td {
 
 a {
     text-decoration: none;
-    touch-action: manipulation;
-    color: white;
 }
 
 button {

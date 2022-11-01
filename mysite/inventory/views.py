@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
 from django.http import FileResponse
 import io
 from reportlab.pdfgen import canvas
-from django.http import HttpResponseRedirect
+from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import letter
 import datetime
 
 
@@ -42,15 +44,25 @@ def order(request, order_date):
 def orderfile(request, order_date):
     things = Order.objects.filter(date=order_date)
 
+    # Create Bytestream buffer
     buffer = io.BytesIO()
 
-    p = canvas.Canvas(buffer)
+    # Create a canvas
+    p = canvas.Canvas(buffer, pagesize=letter, bottomup=0)
 
-    x = 300; y = 300
+    # Create a text object
+    textob = p.beginText()
+    textob.setTextOrigin(inch, inch)
+
+    textob.setFont("Helvetica", 20)
+    textob.textLine("Woodland Espresso Order History")
+    textob.setFont("Helvetica", 14)
+    textob.textLine(order_date)
+
     for thing in things:
-        p.drawString(x, y, str(thing.item))
-        y += 20
+        textob.textLine(str(thing.item) + str(thing.order_qty))
 
+    p.drawText(textob)
     p.showPage()
     p.save()
 

@@ -6,7 +6,7 @@
 
 {% block main %}
     <div class="row justify-content-center py-5">
-        <div class="col-md-8">
+        <div class="col-lg-6">
             <table class="table">
                 <thead>
                     <tr>
@@ -25,7 +25,7 @@
                         <td class="align-middle">{{ item.quota }}</td>
                         <td class="align-middle">
                             <div class="input-group">
-                                <input id="{{ item.id }}" style="width: 30px;" type="text" name="{{ item.id }}" class="form-control" value="0" aria-label="Number of items to order">
+                                <input id="{{ item.id }}" style="width: 20px;" type="text" name="{{ item.id }}" class="form-control" value="0" aria-label="Number of items to order">
                                 <button class="btn btn-danger px-3" type="button" onclick="increment('{{ item.id }}', 'd')">-</button>
                                 <button class="btn btn-success" type="button" onclick="increment('{{ item.id }}', 'i')">+</button>
                             </div>
@@ -35,7 +35,7 @@
                     
             </table>
             {% if item_list %}
-                <button type="submit" class="btn btn-dark">Submit</button>
+                <button type="submit" class="btn btn-outline-success">Submit</button>
             {% else %}
                 <p>Please add inventory items via the Admin page.</p>
             {% endif %}

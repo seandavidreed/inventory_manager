@@ -6,75 +6,17 @@
 
 {% block main %}
         {% load static %}
-        <div class="row">
+        <div class="row justify-content-center">
             {% if user.is_authenticated %}
             <div class="col-md-4">
-                <div class="card text-bg-light mx-auto mb-3">
+                <div class="card text-bg-dark mx-auto mb-3">
                     <div class="card-header">Take Inventory</div>
                     <div class="card-body d-flex justify-content-center align-items-center gap-4">
-                        <a href="{% url 'inventory:shed' %}"><button class="btn btn-info btn-lg">Shed</button></a>
-                        <a href="{% url 'inventory:shop' %}"><button class="btn btn-info btn-lg">Shop</button></a>
+                        <a href="{% url 'inventory:shed' %}"><button class="btn btn-success btn-lg">Shed</button></a>
+                        <a href="{% url 'inventory:shop' %}"><button class="btn btn-success btn-lg">Shop</button></a>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card text-bg-light mx-auto mb-3">
-                    <div class="card-header">Item</div>
-                    <div class="card-body d-flex justify-content-center align-items-center gap-4">
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                            Orci dapibus ultrices in iaculis nunc. Adipiscing vitae proin sagittis nisl rhoncus. Amet facilisis magna etiam tempor orci eu lobortis elementum nibh. 
-                            Facilisis volutpat est velit egestas dui id. Ut eu sem integer vitae justo eget magna. Erat imperdiet sed euismod nisi porta. 
-                            Ullamcorper morbi tincidunt ornare massa eget egestas purus viverra. Ut venenatis tellus in metus. In est ante in nibh mauris cursus mattis molestie a. 
-                            Quis eleifend quam adipiscing vitae proin. Et tortor at risus viverra. Elit eget gravida cum sociis natoque penatibus.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card text-bg-light mx-auto mb-3">
-                    <div class="card-header">Data</div>
-                    <div class="card-body d-flex justify-content-center align-items-center gap-4">
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                            Orci dapibus ultrices in iaculis nunc. Adipiscing vitae proin sagittis nisl rhoncus. Amet facilisis magna etiam tempor orci eu lobortis elementum nibh. 
-                            Facilisis volutpat est velit egestas dui id. Ut eu sem integer vitae justo eget magna. Erat imperdiet sed euismod nisi porta. 
-                            Ullamcorper morbi tincidunt ornare massa eget egestas purus viverra. Ut venenatis tellus in metus. In est ante in nibh mauris cursus mattis molestie a. 
-                            Quis eleifend quam adipiscing vitae proin. Et tortor at risus viverra. Elit eget gravida cum sociis natoque penatibus.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card text-bg-light mx-auto mb-3">
-                    <div class="card-header">Item</div>
-                    <div class="card-body d-flex justify-content-center align-items-center gap-4">
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                            Orci dapibus ultrices in iaculis nunc. Adipiscing vitae proin sagittis nisl rhoncus. Amet facilisis magna etiam tempor orci eu lobortis elementum nibh. 
-                            Facilisis volutpat est velit egestas dui id. Ut eu sem integer vitae justo eget magna. Erat imperdiet sed euismod nisi porta. 
-                            Ullamcorper morbi tincidunt ornare massa eget egestas purus viverra. Ut venenatis tellus in metus. In est ante in nibh mauris cursus mattis molestie a. 
-                            Quis eleifend quam adipiscing vitae proin. Et tortor at risus viverra. Elit eget gravida cum sociis natoque penatibus.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card text-bg-light mx-auto mb-3">
-                    <div class="card-header">Data</div>
-                    <div class="card-body d-flex justify-content-center align-items-center gap-4">
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                            Orci dapibus ultrices in iaculis nunc. Adipiscing vitae proin sagittis nisl rhoncus. Amet facilisis magna etiam tempor orci eu lobortis elementum nibh. 
-                            Facilisis volutpat est velit egestas dui id. Ut eu sem integer vitae justo eget magna. Erat imperdiet sed euismod nisi porta. 
-                            Ullamcorper morbi tincidunt ornare massa eget egestas purus viverra. Ut venenatis tellus in metus. In est ante in nibh mauris cursus mattis molestie a. 
-                            Quis eleifend quam adipiscing vitae proin. Et tortor at risus viverra. Elit eget gravida cum sociis natoque penatibus.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
             {% else %}
             <div class="row justify-content-center">
                 <div class="col-md-6">

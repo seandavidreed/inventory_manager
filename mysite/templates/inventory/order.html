@@ -16,14 +16,14 @@
                 </thead>
                 {% for order in orders %}
                     <tr>
-                        <td class="align-middle">{{ order.item }}</td>
-                        <td class="align-middle">{{ order.order_qty }}</td>
+                        <td class="align-middle text-white">{{ order.item }}</td>
+                        <td class="align-middle text-white">{{ order.order_qty }}</td>
                     </tr>
                 {% endfor %}
             </table>
         </div>
         <div class="col-md-8">
-            <a class="nav-link" href="{% url 'inventory:orderfile' order_date %}">Download as PDF</a>
+            <a class="link-light" href="{% url 'inventory:orderfile' order_date %}">Download as PDF</a>
         </div>
     </div>
 {% endblock %}

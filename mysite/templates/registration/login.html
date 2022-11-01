@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block main %}
-
+    {% load static %}
     {% if form.errors %}
         <p>Your username and password didn't match. Please try again.</p>
     {% endif %}
@@ -34,16 +34,13 @@
                     <label for="floatingPassword">Password</label>
                 </div>
                 <div class="d-grid mb-3 input-group">
-                    <button class="btn btn-outline-dark" type="submit" value="login">Login</button>
+                    <button class="btn btn-outline-success" type="submit" value="login">Login</button>
                     <input type="hidden" name="next" value="{{ next }}">
-                </div>
-                <div class="d-grid mb-3 input-group">
-                    <button class="btn btn-outline-dark" type="submit" value="register">Register</button>
                 </div>
             </form>
             <!--Assumes you set of the password_reset view in your URLconf-->
-            <p><a href="{% url 'admin:index' %}">Login As Admin</a></p>
-            <p><a href="{% url 'password_reset' %}">Forgot Password</a></p>
+            <p><a class="link-light" href="{% url 'admin:index' %}">Login As Admin</a></p>
+            <p><a class="link-light" href="{% url 'password_reset' %}">Forgot Password</a></p>
         </div>
     </div>
 {% endblock %}

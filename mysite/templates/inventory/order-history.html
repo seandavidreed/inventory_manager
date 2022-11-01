@@ -7,7 +7,7 @@
 {% block main %}
     <div class="row justify-content-center py-5">
         <div class="col-md-8">
-            <table class="table table-striped">
+            <table class="table table-striped table-sm">
                 <thead>
                     <tr>
                         <th>Order History</th>
@@ -15,7 +15,7 @@
                 </thead>
                 {% for order in order_list %}
                     <tr>
-                        <td class="align-middle"><a href="{% url 'inventory:order' order.date %}">{{ order.date }}</a></td>
+                        <td class="align-middle"><a class="link-light" href="{% url 'inventory:order' order.date %}">{{ order.date }}</a></td>
                     </tr>
                 {% endfor %}
             </table>
