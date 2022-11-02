@@ -10,4 +10,6 @@ urlpatterns = [
     path('pdf/<str:order_date>', views.orderfile, name='orderfile'),
     path('shed/', views.take_inventory, name='shed'),
     path('shop/', views.take_inventory, name='shop'),
+    path('finalize/', views.finalize, name='finalize'),
+    path('success/', views.success, name='success'),
 ]

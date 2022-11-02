@@ -1,0 +1,23 @@
+{% extends 'inventory/layout.html' %}
+
+{% block title %}
+    Finalize
+{% endblock %}
+
+{% block main %}
+    <div class="row justify-content-center py-5">
+        <div class="col-lg-6">
+            <form action="" method="post">
+            {% csrf_token %}
+                <p>{{ supplier_list.name }}</p>
+                <p>Preview Order Form</p>
+                <!--OPTIONAL MESSAGE TO SUPPLIER-->
+                <div class="form-floating mb-3">
+                    <textarea class="form-control" placeholder="Enter optional message here" id="send_message" name="message" style="height: 200px"></textarea>
+                    <label for="send_message">Message</label>
+                </div>
+                <button type="submit" class="btn btn-outline-success">Submit Order</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

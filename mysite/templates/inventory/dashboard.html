@@ -5,25 +5,24 @@
 {% endblock %}
 
 {% block main %}
-        {% load static %}
-        <div class="row justify-content-center">
-            {% if user.is_authenticated %}
+    {% load static %}
+        <div class="row justify-content-center py-5">
+        {% if user.is_authenticated %}
             <div class="col-md-4">
                 <div class="card text-bg-dark mx-auto mb-3">
                     <div class="card-header">Take Inventory</div>
                     <div class="card-body d-flex justify-content-center align-items-center gap-4">
-                        <a href="{% url 'inventory:shed' %}"><button class="btn btn-success btn-lg">Shed</button></a>
-                        <a href="{% url 'inventory:shop' %}"><button class="btn btn-success btn-lg">Shop</button></a>
+                        <a href="{% url 'inventory:shop' %}"><button class="btn btn-success btn-lg">Start</button></a>
                     </div>
                 </div>
             </div>
-            {% else %}
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    {% load static %}
-                    <img src="{% static 'images/inventory_logo3.png' %}" style="width: 90%; height: auto;">  
-                </div>
-            </div>
-            {% endif %}
         </div>
+        {% else %}
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                {% load static %}
+                <img src="{% static 'images/inventory_logo3.png' %}" style="width: 90%; height: auto;">  
+            </div>
+        </div>
+        {% endif %}
 {% endblock %}

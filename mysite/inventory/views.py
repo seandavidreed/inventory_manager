@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
-from django.http import FileResponse
+from django.http import HttpResponseRedirect, FileResponse
+from django.core.mail import send_mail
+from django.urls import reverse
 import io
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
@@ -16,16 +17,39 @@ from .models import Supplier, Item, Order
 def take_inventory(request):
     if request.path == '/inventory/shed/':
         item_list = Item.objects.filter(storage__contains='A')
+        next_page = 'inventory:finalize'
     else:
         item_list = Item.objects.filter(storage__contains='B')
+        next_page = 'inventory:shed'
 
     if request.method == "POST":
         for item in item_list:
             item_value = request.POST[str(item.id)]
             order, was_created = Order.objects.get_or_create(date=datetime.datetime.now(), item_id=item.id)
             order.order_qty = item_value
-            order.save() 
+            order.save()
+        return HttpResponseRedirect(reverse(next_page))
     return render(request, 'inventory/take-inventory.html', {'item_list': item_list})
+
+@login_required
+def finalize(request):
+    supplier_list = Supplier.objects.get(pk=2)
+    order_form = Order.objects.filter(supplier=supplier_list.name)
+    if request.method == "POST":
+        message = request.POST['message']
+        send_mail(
+            'Order Form',
+            message,
+            'woodlandespresso@gmail.com',
+            [supplier_list.email],
+            fail_silently=False,
+        )
+        return HttpResponseRedirect(reverse('inventory:success'))
+    return render(request, 'inventory/finalize.html', {'supplier_list': supplier_list, 'order_form': order_form})
+
+@login_required
+def success(request):
+    return render(request, 'inventory/success.html')
 
 
 @login_required

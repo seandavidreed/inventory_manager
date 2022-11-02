@@ -1,7 +1,7 @@
 {% extends "inventory/layout.html" %}
 
 {% block title %}
-    Shed
+    Take Inventory
 {% endblock %}
 
 {% block main %}
@@ -35,7 +35,7 @@
                     
             </table>
             {% if item_list %}
-                <button type="submit" class="btn btn-outline-success">Submit</button>
+                <button type="submit" class="btn btn-outline-success">Next</button>
             {% else %}
                 <p>Please add inventory items via the Admin page.</p>
             {% endif %}
