@@ -47,45 +47,48 @@ def orderfile(request, order_date):
 
     # Create Bytestream buffer
     buffer = io.BytesIO()
+    b = True
 
     # Create a canvas
     p = canvas.Canvas(buffer, pagesize=letter, bottomup=0)
 
-    # Create a text object
-    textob = p.beginText()
-    textob.setTextOrigin(inch, inch)
-
-    # Create Letterhead
-    textob.setFont("Courier", 18)
-    textob.textLine("Woodland Espresso")
-    p.setLineWidth(0.05*inch)
-    p.line(1*inch, 1.1*inch, 7.5*inch, 1.1*inch)
-
-    # Display order date
-    textob.setFont("Courier", 12)
-    textob.textLine("Order Placed: " + order_date)
-    textob.textLine()
-
-    # Table Headers (currently hard-coded: probably should change)
-    textob.setFont("Courier-Bold", 12)
-    textob.textOut("Item")
-    textob.moveCursor(5*inch, 0)
-    textob.textOut("Order Qty")
-    textob.moveCursor(-5*inch, 0)
-    textob.textLine()
-
-    # Populate document with data from database
-    textob.setFont("Courier", 12)
     for thing in things:
+        if b is True:
+            # Create a text object
+            textob = p.beginText()
+            textob.setTextOrigin(inch, inch)
+
+            # Create Letterhead
+            textob.setFont("Courier", 18)
+            textob.textLine("Woodland Espresso")
+            p.setLineWidth(0.05*inch)
+            p.line(1*inch, 1.1*inch, 7.5*inch, 1.1*inch)
+
+            # Display order date
+            textob.setFont("Courier", 12)
+            textob.textLine("Order Placed: " + order_date)
+            textob.textLine()
+
+            # Table Headers (currently hard-coded: probably should change)
+            textob.setFont("Courier-Bold", 12)
+            textob.textOut("Item")
+            textob.moveCursor(5*inch, 0)
+            textob.textOut("Order Qty")
+            textob.moveCursor(-5*inch, 0)
+            textob.textLine()
+            b = False
+
+        # Populate document with data from database
+        textob.setFont("Courier", 12)
         textob.textOut(str(thing.item))
         textob.moveCursor(5*inch, 0)
         textob.textOut(str(thing.order_qty))
         textob.moveCursor(-5*inch, 0)
         textob.textLine()
         if textob.getCursor()[1] >= 712:
+            b = True
             p.drawText(textob)
             p.showPage()
-            textob.setTextOrigin(inch, inch)
 
     # Render PDF document
     p.drawText(textob)
