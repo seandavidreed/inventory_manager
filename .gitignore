@@ -10,4 +10,7 @@ media
 # Backup files #
 *.bak
 
+#For Email
+.env
+
 
