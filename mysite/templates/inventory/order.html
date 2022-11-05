@@ -23,7 +23,10 @@
             </table>
         </div>
         <div class="col-md-8">
-            <a class="link-light" href="{% url 'inventory:orderfile' order_date %}">Download as PDF</a>
+            <form action="" method="post">
+                {% csrf_token %}
+                <button type="submit">Download as PDF</button>
+            </form>
         </div>
     </div>
 {% endblock %}
