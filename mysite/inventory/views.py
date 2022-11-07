@@ -6,7 +6,7 @@ from django.urls import reverse
 import datetime
 
 from .models import Supplier, Item, Order
-from .functions import createOrder, downloadHistory
+from .functions import createPDF
 
 # Create your views here.
 @login_required
@@ -33,7 +33,7 @@ def finalize(request):
     supplier_list = Supplier.objects.get(pk=2)
     if request.method == "POST":
         message = request.POST['message']
-        pdf = createOrder()
+        pdf = createPDF()
         email = EmailMessage(
             subject='Order Form',
             body=message,
@@ -62,7 +62,7 @@ def order(request, order_date):
     orders = Order.objects.filter(date=order_date)
 
     if request.method == "POST":
-        pdf = downloadHistory(orders, order_date)
+        pdf = createPDF(orders, order_date)
         return FileResponse(pdf, as_attachment=True, filename='order.pdf')
 
     return render(request, 'inventory/order.html', {'orders': orders})
