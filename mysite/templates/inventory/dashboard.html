@@ -16,6 +16,14 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-4">
+                <div class="card text-bg-dark mx-auto mb-3">
+                    <div class="card-header">Analytics</div>
+                    <div class="card-body d-flex justify-content-center align-items-center gap-4">
+                        <a href="{% url 'inventory:analytics' %}"><button class="btn btn-success btn-lg">View</button></a>
+                    </div>
+                </div>
+            </div>
         </div>
         {% else %}
         <div class="row justify-content-center">

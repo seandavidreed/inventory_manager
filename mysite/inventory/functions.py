@@ -12,7 +12,7 @@ def createPDF(orders=None, order_date=None):
     as_email = False
     if orders is None and order_date is None:
         as_email = True
-        orders = Order.objects.filter(date=datetime.datetime.now(), item__supplier__name='Cash and Carry')
+        orders = Order.objects.filter(date=datetime.datetime.now(), item__supplier__name='Cash and Carry').exclude(order_qty=0)
         order_date = str(datetime.datetime.now())
 
     # Create Bytestream buffer

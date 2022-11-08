@@ -52,6 +52,11 @@ def success(request):
 
 
 @login_required
+def analytics(request):
+    return render(request, 'inventory/analytics.html')
+
+
+@login_required
 def history(request):
     order_list = Order.objects.all().values('date').distinct().order_by('-date')
     return render(request, 'inventory/order-history.html', {'order_list': order_list})

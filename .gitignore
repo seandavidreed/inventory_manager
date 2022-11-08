@@ -10,7 +10,7 @@ media
 # Backup files #
 *.bak
 
-#For Email
-.env
+#For Email (UNCOMMENT .env WHEN SHIPPING APP)
+#.env
 
 
