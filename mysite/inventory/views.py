@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, FileResponse
+from django.contrib.auth import get_user_model
 from django.core.mail import EmailMessage
 from django.urls import reverse
 import datetime
@@ -31,13 +32,16 @@ def take_inventory(request):
 @login_required
 def finalize(request):
     supplier_list = Supplier.objects.get(pk=2)
+    email = get_user_model().objects.filter(is_superuser=True).values_list('email', flat=True)
     if request.method == "POST":
         message = request.POST['message']
         pdf = createPDF()
+        if pdf is None:
+            return render(request, 'inventory/empty-order.html')
         email = EmailMessage(
             subject='Order Form',
             body=message,
-            from_email='seanreed7992@gmail.com',
+            from_email=email[0],
             to=[supplier_list.email],
         )
         email.attach('orderform.pdf', pdf, 'application/pdf')
