@@ -14,6 +14,7 @@
                         <th>Unit</th>
                         <th>Quota</th>
                         <th>Order</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <form action="" method="post">
@@ -24,9 +25,11 @@
                         <td class="align-middle">{{ item.unit }}</td>
                         <td class="align-middle">{{ item.quota }}</td>
                         <td class="align-middle">
-                            <div class="input-group">
-                                <input id="{{ item.id }}" style="width: 20px;" type="text" name="{{ item.id }}" class="form-control" value="0" aria-label="Number of items to order">
-                                <button class="btn btn-danger px-3" type="button" onclick="increment('{{ item.id }}', 'd')">-</button>
+                            <input id="{{ item.id }}" type="text" style="max-width: 60px;" name="{{ item.id }}" class="form-control" value="0" aria-label="Number of items to order">
+                        </td>
+                        <td class="align-middle">
+                            <div class="btn-group d-flex flex-nowrap" role="group" aria-label="Small button group">
+                                <button class="btn btn-danger" type="button" onclick="increment('{{ item.id }}', 'd')">-</button>
                                 <button class="btn btn-success" type="button" onclick="increment('{{ item.id }}', 'i')">+</button>
                             </div>
                         </td>
