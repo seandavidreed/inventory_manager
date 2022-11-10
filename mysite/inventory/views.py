@@ -31,21 +31,33 @@ def take_inventory(request):
 
 @login_required
 def finalize(request):
-    supplier_list = Supplier.objects.get(pk=2)
-    email = get_user_model().objects.filter(is_superuser=True).values_list('email', flat=True)
+    sent = False
+    # Fetch only the names of suppliers that have items in the Item table
+    supplier_list = Item.objects.values_list('supplier__name', flat=True).distinct()
+    print(supplier_list)
     if request.method == "POST":
-        message = request.POST['message']
-        pdf = createPDF()
-        if pdf is None:
+        # Get Administrator's Email Address
+        email = get_user_model().objects.filter(is_superuser=True).values_list('email', flat=True).first()
+        for supplier in supplier_list:
+            # Get data associated with supplier from supplier table (Email, Phone)
+            supplier_info = Supplier.objects.get(name=supplier)
+            # Get email message addressed to supplier from post request
+            message = request.POST[supplier]
+            # Generate PDF with supplier's items of non-zero order_qty
+            pdf = createPDF(supplier=supplier)
+            if pdf is None:
+                continue
+            email = EmailMessage(
+                subject='Order Form',
+                body=message,
+                from_email=email,
+                to=[supplier_info.email],
+            )
+            email.attach(supplier_info.name + '_order.pdf', pdf, 'application/pdf')
+            email.send(fail_silently=False)
+            sent = True
+        if not sent:
             return render(request, 'inventory/empty-order.html')
-        email = EmailMessage(
-            subject='Order Form',
-            body=message,
-            from_email=email[0],
-            to=[supplier_list.email],
-        )
-        email.attach('orderform.pdf', pdf, 'application/pdf')
-        email.send(fail_silently=False)
         return HttpResponseRedirect(reverse('inventory:success'))
     return render(request, 'inventory/finalize.html', {'supplier_list': supplier_list})
 
@@ -71,7 +83,7 @@ def order(request, order_date):
     orders = Order.objects.filter(date=order_date)
 
     if request.method == "POST":
-        pdf = createPDF(orders, order_date)
+        pdf = createPDF(orders=orders, order_date=order_date)
         return FileResponse(pdf, as_attachment=True, filename='order.pdf')
 
     return render(request, 'inventory/order.html', {'orders': orders})

@@ -9,12 +9,14 @@
         <div class="col-lg-6">
             <form action="" method="post">
             {% csrf_token %}
-                <p>{{ supplier_list.name }}</p>
-                <!--OPTIONAL MESSAGE TO SUPPLIER-->
-                <div class="form-floating mb-3">
-                    <textarea class="form-control" placeholder="Enter optional message here" id="send_message" name="message" style="height: 200px"></textarea>
-                    <label for="send_message">Message</label>
-                </div>
+                {% for supplier in supplier_list %}
+                    <p>{{ supplier }}</p>
+                    <!--OPTIONAL MESSAGE TO SUPPLIER-->
+                    <div class="form-floating mb-3">
+                        <textarea class="form-control" placeholder="Enter optional message here" id="send_message" name="{{ supplier }}" style="height: 200px"></textarea>
+                        <label for="send_message">Message</label>
+                    </div>
+                {% endfor %}
                 <div class="form-check form-switch">
                     <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" required>
                     <label class="form-check-label link-light" for="flexSwitchCheckDefault">Confirm Order</label>
