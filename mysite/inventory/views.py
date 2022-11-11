@@ -53,18 +53,11 @@ def finalize(request):
                 from_email=email,
                 to=[supplier_info.email],
             )
-            email.attach(supplier_info.name + '_order.pdf', pdf, 'application/pdf')
+            email.attach(supplier + '_order.pdf', pdf, 'application/pdf')
             email.send(fail_silently=False)
             sent = True
-        if not sent:
-            return render(request, 'inventory/empty-order.html')
-        return HttpResponseRedirect(reverse('inventory:success'))
+        return render(request, 'inventory/result.html', {'sent': sent})
     return render(request, 'inventory/finalize.html', {'supplier_list': supplier_list})
-
-
-@login_required
-def success(request):
-    return render(request, 'inventory/success.html')
 
 
 @login_required

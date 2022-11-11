@@ -1,0 +1,24 @@
+{% extends 'inventory/layout.html' %}
+
+{% block title %}
+    Success!
+{% endblock %}
+
+{% block main %}
+    {% load static %}
+    {% if sent %}
+        <div class="row justify-content-center py-5">
+            <div class="col-lg-4">
+                <h2 style="color: white;">Orders Submitted Successfully</h2>
+                <a class="link-light" href="{% url 'inventory:dashboard' %}">Return to Dashboard</a>
+            </div>
+        </div>
+    {% else %}
+        <div class="row justify-content-center py-5">
+            <div class="col-lg-4">
+                <h2 style="color: white;">Order is empty. Please enter values for submission.</h2>
+                <a class="link-light" href="{% url 'inventory:dashboard' %}">Return to Dashboard</a>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
