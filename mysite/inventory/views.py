@@ -33,7 +33,7 @@ def take_inventory(request):
 def finalize(request):
     sent = False
     # Fetch only the names of suppliers that have items in the Item table
-    supplier_list = Item.objects.values_list('supplier__name', flat=True).distinct()
+    supplier_list = Order.objects.values_list('item__supplier__name', flat=True).filter(date=datetime.datetime.now()).exclude(order_qty=0).distinct()
     print(supplier_list)
     if request.method == "POST":
         # Get Administrator's Email Address
