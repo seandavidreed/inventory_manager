@@ -12,20 +12,38 @@ from .functions import createPDF
 # Create your views here.
 @login_required
 def take_inventory(request):
-    if request.path == '/inventory/shed/':
-        item_list = Item.objects.filter(storage__contains='A')
-        next_page = 'inventory:finalize'
-    else:
-        item_list = Item.objects.filter(storage__contains='B')
-        next_page = 'inventory:shed'
+    
+    # Get all items from database
+    item_list = Item.objects.all()
 
     if request.method == "POST":
+        # Declare list to store orders temporarily, until validated
+        orders = []
+        order_is_valid = False
+
+        # Get values from template form one at a time
         for item in item_list:
             item_value = request.POST[str(item.id)]
-            order, was_created = Order.objects.get_or_create(date=datetime.datetime.now(), item_id=item.id)
-            order.order_qty = item_value
-            order.save()
-        return HttpResponseRedirect(reverse(next_page))
+
+            # If at least one item has a non-zero value, the order is valid
+            if item_value != '0':
+                order_is_valid = True
+
+            # Append order data to orders list  
+            orders.append(Order(item_id=item.id, date=datetime.datetime.now(), order_qty=item_value))
+        
+        # Validate the order and redirect if invalid
+        if not order_is_valid:
+            return render(request, 'inventory/result.html', {'sent': False})
+
+        # Check if order already exists, else add order to the database
+        if Order.objects.filter(date=datetime.datetime.now()).exists():
+            return render(request, 'inventory/analytics.html')
+        else:
+            Order.objects.bulk_create(orders)
+
+        # Go to final ordering stage to send emails
+        return HttpResponseRedirect(reverse('inventory:finalize'))
     return render(request, 'inventory/take-inventory.html', {'item_list': item_list})
 
 
