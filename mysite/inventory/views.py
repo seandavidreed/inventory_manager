@@ -17,8 +17,9 @@ def take_inventory(request):
     item_list = Item.objects.all()
 
     if request.method == "POST":
-        # Declare list to store orders temporarily, until validated
-        orders = []
+        # Prepare to store orders temporarily in session, until validated and transferred to database
+        request.session['orders'] = []
+        request.session['suppliers'] = []
         order_is_valid = False
 
         # Get values from template form one at a time
@@ -28,19 +29,16 @@ def take_inventory(request):
             # If at least one item has a non-zero value, the order is valid
             if item_value != '0':
                 order_is_valid = True
+                request.session['suppliers'].append(item.supplier.name)
 
-            # Append order data to orders list  
-            orders.append(Order(item_id=item.id, date=datetime.datetime.now(), order_qty=item_value))
+            # Append order data to session 
+            request.session['orders'].append((item.id, item_value))
         
-        # Validate the order and redirect if invalid
+        # Validate the order and clear session and redirect if invalid
         if not order_is_valid:
+            del request.session['suppliers']
+            del request.session['orders']
             return render(request, 'inventory/result.html', {'sent': False})
-
-        # Check if order already exists, else add order to the database
-        if Order.objects.filter(date=datetime.datetime.now()).exists():
-            return render(request, 'inventory/analytics.html')
-        else:
-            Order.objects.bulk_create(orders)
 
         # Go to final ordering stage to send emails
         return HttpResponseRedirect(reverse('inventory:finalize'))
@@ -50,13 +48,22 @@ def take_inventory(request):
 @login_required
 def finalize(request):
     sent = False
-    # Fetch only the names of suppliers that have items in the Item table
-    supplier_list = Order.objects.values_list('item__supplier__name', flat=True).filter(date=datetime.datetime.now()).exclude(order_qty=0).distinct()
-    print(supplier_list)
     if request.method == "POST":
+
+        # Get most recent order number
+        try:
+            order_number = Order.objects.values_list('order_number', flat=True).latest('order_number') + 1
+        except:
+            order_number = 0
+        
+
+        # Retrieve order data from session and save it to database
+        for order in request.session['orders']:
+            Order.objects.create(item_id=order[0], date=datetime.datetime.now(), order_qty=order[1], order_number=order_number)
+
         # Get Administrator's Email Address
         email = get_user_model().objects.filter(is_superuser=True).values_list('email', flat=True).first()
-        for supplier in supplier_list:
+        for supplier in request.session['suppliers']:
             # Get data associated with supplier from supplier table (Email, Phone)
             supplier_info = Supplier.objects.get(name=supplier)
             # Get email message addressed to supplier from post request
@@ -75,7 +82,7 @@ def finalize(request):
             email.send(fail_silently=False)
             sent = True
         return render(request, 'inventory/result.html', {'sent': sent})
-    return render(request, 'inventory/finalize.html', {'supplier_list': supplier_list})
+    return render(request, 'inventory/finalize.html', {'supplier_list': request.session['suppliers']})
 
 
 @login_required
@@ -85,16 +92,17 @@ def analytics(request):
 
 @login_required
 def history(request):
-    order_list = Order.objects.all().values('date').distinct().order_by('-date')
+    order_list = Order.objects.all().values('date', 'order_number').distinct().order_by('-order_number')
     return render(request, 'inventory/order-history.html', {'order_list': order_list})
 
 
 @login_required
-def order(request, order_date):
-    orders = Order.objects.filter(date=order_date)
+def order(request, order_number):
+    print(order_number)
+    orders = Order.objects.filter(order_number=order_number)
 
     if request.method == "POST":
-        pdf = createPDF(orders=orders, order_date=order_date)
+        pdf = createPDF(orders=orders)
         return FileResponse(pdf, as_attachment=True, filename='order.pdf')
 
     return render(request, 'inventory/order.html', {'orders': orders})
