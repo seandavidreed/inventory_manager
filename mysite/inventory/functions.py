@@ -7,17 +7,21 @@ import datetime
 from .models import Order
 
 def createPDF(order_number=None, supplier=None, orders=None):
-    # Supplier argument is provided when function is used to attach PDF to email.
+    # Order Number and Supplier arguments are provided when function is used to attach PDF to email.
     # Orders argument is provided when function is used to download order history.
+    # If function is used improperly, None is returned
     as_email = False
-    if supplier is not None:
+    if order_number and supplier:
         as_email = True
         orders = Order.objects.filter(order_number=order_number, item__supplier__name=supplier).exclude(order_qty=0)
         if not orders:
             return None
         order_date = str(datetime.datetime.now())
-    else:
+    elif orders:
         order_date = str(orders[0].date)
+    else:
+        raise Exception('Improperly supplied arguments!' \
+            ' Usage: use order_number and supplier together for email attachment; use orders alone for order history download')
 
     # Create Bytestream buffer
     buffer = io.BytesIO()
