@@ -19,7 +19,7 @@ def take_inventory(request):
     if request.method == "POST":
         # Prepare to store orders temporarily in session, until validated and transferred to database
         request.session['orders'] = []
-        request.session['suppliers'] = []
+        request.session['suppliers'] = {}
         order_is_valid = False
 
         # Get values from template form one at a time
@@ -29,7 +29,7 @@ def take_inventory(request):
             # If at least one item has a non-zero value, the order is valid
             if item_value != '0':
                 order_is_valid = True
-                request.session['suppliers'].append(item.supplier.name)
+                request.session['suppliers'][item.supplier.name] = item.supplier.name
 
             # Append order data to session 
             request.session['orders'].append((item.id, item_value))
@@ -63,13 +63,15 @@ def finalize(request):
 
         # Get Administrator's Email Address
         email = get_user_model().objects.filter(is_superuser=True).values_list('email', flat=True).first()
+
+
         for supplier in request.session['suppliers']:
             # Get data associated with supplier from supplier table (Email, Phone)
             supplier_info = Supplier.objects.get(name=supplier)
             # Get email message addressed to supplier from post request
             message = request.POST[supplier]
             # Generate PDF with supplier's items of non-zero order_qty
-            pdf = createPDF(supplier=supplier)
+            pdf = createPDF(order_number=order_number, supplier=supplier)
             if pdf is None:
                 continue
             email = EmailMessage(
@@ -98,7 +100,6 @@ def history(request):
 
 @login_required
 def order(request, order_number):
-    print(order_number)
     orders = Order.objects.filter(order_number=order_number)
 
     if request.method == "POST":
