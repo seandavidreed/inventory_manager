@@ -9,3 +9,11 @@ function increment(id, mode) {
         elem.value = parseInt(elem.value) - 1;
     }
 }
+
+// Change the color of any order entries that are zero
+function check_qty(id) {
+    var elem = document.getElementById(id);
+    if (elem.innerHTML === '0') {
+        elem.style.color = "#CCCCCC";
+    }
+}

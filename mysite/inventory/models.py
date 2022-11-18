@@ -26,7 +26,7 @@ class Item(models.Model):
 class Order(models.Model):
     item = models.ForeignKey(Item, on_delete=models.DO_NOTHING)
     date = models.DateField()
-    order_number = models.IntegerField(default=0, help_text='The unique value used to identify an order')
+    order_number = models.IntegerField(default=1, help_text='The unique value used to identify an order')
     order_qty = models.IntegerField(default=0, help_text='The amount of a given item to be ordered')
 
     def __str__(self):

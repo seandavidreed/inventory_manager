@@ -10,5 +10,7 @@ urlpatterns = [
     path('shed/', views.take_inventory, name='shed'),
     path('shop/', views.take_inventory, name='shop'),
     path('finalize/', views.finalize, name='finalize'),
+    path('success/', views.success, name='success'),
+    path('empty_order/', views.empty_order, name='empty_order'),
     path('analytics/', views.analytics, name='analytics'),
 ]

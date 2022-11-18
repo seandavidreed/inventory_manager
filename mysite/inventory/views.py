@@ -38,7 +38,7 @@ def take_inventory(request):
         if not order_is_valid:
             del request.session['suppliers']
             del request.session['orders']
-            return render(request, 'inventory/result.html', {'sent': False})
+            return HttpResponseRedirect(reverse('inventory:empty_order'))
 
         # Go to final ordering stage to send emails
         return HttpResponseRedirect(reverse('inventory:finalize'))
@@ -47,14 +47,13 @@ def take_inventory(request):
 
 @login_required
 def finalize(request):
-    sent = False
     if request.method == "POST":
 
         # Get most recent order number
         try:
             order_number = Order.objects.values_list('order_number', flat=True).latest('order_number') + 1
         except:
-            order_number = 0
+            order_number = 1
         
 
         # Retrieve order data from session and save it to database
@@ -82,9 +81,18 @@ def finalize(request):
             )
             email.attach(supplier + '_order.pdf', pdf, 'application/pdf')
             email.send(fail_silently=False)
-            sent = True
-        return render(request, 'inventory/result.html', {'sent': sent})
+        return HttpResponseRedirect(reverse('inventory:success'))
     return render(request, 'inventory/finalize.html', {'supplier_list': request.session['suppliers']})
+
+
+@login_required
+def success(request):
+    return render(request, 'inventory/success.html')
+
+
+@login_required
+def empty_order(request):
+    return render(request, 'inventory/empty-order.html')
 
 
 @login_required

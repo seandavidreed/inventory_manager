@@ -1,22 +1,5 @@
 body {
-    background: black;
     height: 100vh;
-}
-
-.card {
-    opacity: 80%;
-}
-  
-h1 {
-    color: #FFFFFF;
-}
-
-input, textarea {
-    opacity: 80%;
-}
-
-th, td {
-    color: white;
 }
 
 a {
