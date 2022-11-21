@@ -9,32 +9,38 @@
         <div class="row justify-content-center pt-5 pb-3">
         {% if user.is_authenticated %}
             <div class="col-md-4">
-                <div class="card border-secondary mx-auto mb-3">
-                    <div class="card-header">Take Inventory</div>
-                    <div class="card-body text-secondary d-flex justify-content-center align-items-center gap-4">
-                        <a href="{% url 'inventory:shop' %}"><button class="btn btn-success btn-lg">Start</button></a>
+                <a href="{% url 'inventory:shop' %}">
+                <div class="card bg-dark text-white">
+                    <img src="{% static 'images/inventory2.jpg' %}" class="card-img" alt="...">
+                    <div class="card-img-overlay d-flex justify-content-center align-items-center">
+                        <h2 class="card-title">Inventory</h3>
                     </div>
                 </div>
+                </a>
             </div>
         </div>
         <div class="row justify-content-center py-3">
             <div class="col-md-4">
-                <div class="card border-secondary mx-auto mb-3">
-                    <div class="card-header">History</div>
-                    <div class="card-body text-secondary d-flex justify-content-center align-items-center gap-4">
-                        <a href="{% url 'inventory:history' %}"><button class="btn btn-success btn-lg">View</button></a>
+                <a href="{% url 'inventory:history' %}">
+                <div class="card bg-dark text-white">
+                    <img src="{% static 'images/history.jpg' %}" class="card-img" alt="...">
+                    <div class="card-img-overlay d-flex justify-content-center align-items-center">
+                        <h2 class="card-title">History</h3>
                     </div>
                 </div>
+                </a>
             </div>
         </div>
         <div class="row justify-content-center py-3">
             <div class="col-md-4">
-                <div class="card border-secondary text-dark bg-light mx-auto mb-3">
-                    <div class="card-header">Analytics</div>
-                    <div class="card-body text-secondary d-flex justify-content-center align-items-center gap-4">
-                        <a href="{% url 'inventory:analytics' %}"><button class="btn btn-success btn-lg">View</button></a>
+                <a href="{% url 'inventory:analytics' %}">
+                <div class="card bg-dark text-dark">
+                    <img src="{% static 'images/analytics.jpg' %}" class="card-img" alt="...">
+                    <div class="card-img-overlay d-flex justify-content-center align-items-center">
+                        <h2 class="card-title">Analytics</h3>
                     </div>
                 </div>
+                </a>
             </div>
         </div>
         {% else %}
