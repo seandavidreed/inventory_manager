@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect, FileResponse
 from django.contrib.auth import get_user_model
 from django.core.mail import EmailMessage
 from django.urls import reverse
+from django.db.models import F
 import datetime
 
 from .models import Supplier, Item, Order
@@ -70,8 +71,10 @@ def finalize(request):
         
 
         # Retrieve order data from session and save it to database
+        # Update latest quantity for each item, taking the average of the last two order quantities
         for order in request.session['orders']:
             Order.objects.create(item_id=order[0], date=datetime.datetime.now(), order_qty=order[1], order_number=order_number)
+            Item.objects.filter(id=order[0]).update(latest_qty = (F('latest_qty') + order[1]) / 2)
 
         # Get Administrator's Email Address
         email = get_user_model().objects.filter(is_superuser=True).values_list('email', flat=True).first()

@@ -28,7 +28,7 @@
                         <td class="align-middle">{{ item.unit }}</td>
                         <td class="align-middle">{{ item.quota }}</td>
                         <td class="align-middle">
-                            <input id="{{ item.id }}" type="text" style="max-width: 60px;" name="{{ item.id }}" class="form-control" value="0" aria-label="Number of items to order">
+                            <input id="{{ item.id }}" type="text" style="max-width: 60px;" name="{{ item.id }}" class="form-control" value="{{ item.latest_qty }}" aria-label="Number of items to order">
                         </td>
                         <td class="align-middle">
                             <div class="btn-group d-flex flex-nowrap" role="group" aria-label="Small button group">
@@ -59,7 +59,7 @@
                     <td class="align-middle">{{ item.unit }}</td>
                     <td class="align-middle">{{ item.quota }}</td>
                     <td class="align-middle">
-                        <input id="{{ item.id }}" type="text" style="max-width: 60px;" name="{{ item.id }}" class="form-control" value="0" aria-label="Number of items to order">
+                        <input id="{{ item.id }}" type="text" style="max-width: 60px;" name="{{ item.id }}" class="form-control" value="{{ item.latest_qty }}" aria-label="Number of items to order">
                     </td>
                     <td class="align-middle">
                         <div class="btn-group d-flex flex-nowrap" role="group" aria-label="Small button group">
