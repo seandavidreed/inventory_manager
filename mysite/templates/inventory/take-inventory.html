@@ -7,8 +7,13 @@
 {% block main %}
     <div class="row justify-content-center py-5">
         <div class="col-lg-6">
+            <form action="" method="post">
+            {% csrf_token %}
             <table class="table">
                 <thead>
+                    <tr>
+                        <th colspan="5"><strong>Shed</strong></th>
+                    </tr>
                     <tr>
                         <th>Brand</th>
                         <th>Unit</th>
@@ -17,9 +22,7 @@
                         <th></th>
                     </tr>
                 </thead>
-                <form action="" method="post">
-                {% csrf_token %}
-                {% for item in item_list %}
+                {% for item in item_list_shed %}
                     <tr>
                         <td class="align-middle">{{ item.brand }}</td>
                         <td class="align-middle">{{ item.unit }}</td>
@@ -35,9 +38,40 @@
                         </td>
                     </tr>
                 {% endfor %}
+            </table>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th colspan="5"><strong>Shop</strong></th>
+                    </tr>
+                    <tr>
+                        <th>Brand</th>
+                        <th>Unit</th>
+                        <th>Quota</th>
+                        <th>Order</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+            {% for item in item_list_shop %}
+                <tr>
+                    <td class="align-middle">{{ item.brand }}</td>
+                    <td class="align-middle">{{ item.unit }}</td>
+                    <td class="align-middle">{{ item.quota }}</td>
+                    <td class="align-middle">
+                        <input id="{{ item.id }}" type="text" style="max-width: 60px;" name="{{ item.id }}" class="form-control" value="0" aria-label="Number of items to order">
+                    </td>
+                    <td class="align-middle">
+                        <div class="btn-group d-flex flex-nowrap" role="group" aria-label="Small button group">
+                            <button class="btn btn-danger" type="button" onclick="increment('{{ item.id }}', 'd')">-</button>
+                            <button class="btn btn-success" type="button" onclick="increment('{{ item.id }}', 'i')">+</button>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
                     
             </table>
-            {% if item_list %}
+            {% if item_list_shed or item_list_shop %}
                 <button type="submit" class="btn btn-outline-success">Next</button>
             {% else %}
                 <p>Please add inventory items via the Admin page.</p>

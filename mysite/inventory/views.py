@@ -14,7 +14,8 @@ from .functions import createPDF
 def take_inventory(request):
     
     # Get all items from database
-    item_list = Item.objects.all()
+    item_list_shed = Item.objects.filter(storage='A')
+    item_list_shop = Item.objects.filter(storage='B')
 
     if request.method == "POST":
         # Prepare to store orders temporarily in session, until validated and transferred to database
@@ -23,7 +24,19 @@ def take_inventory(request):
         order_is_valid = False
 
         # Get values from template form one at a time
-        for item in item_list:
+        for item in item_list_shed:
+            item_value = request.POST[str(item.id)]
+
+            # If at least one item has a non-zero value, the order is valid
+            if item_value != '0':
+                order_is_valid = True
+                request.session['suppliers'][item.supplier.name] = item.supplier.name
+
+            # Append order data to session 
+            request.session['orders'].append((item.id, item_value))
+
+        # Get values from template form one at a time
+        for item in item_list_shop:
             item_value = request.POST[str(item.id)]
 
             # If at least one item has a non-zero value, the order is valid
@@ -42,7 +55,7 @@ def take_inventory(request):
 
         # Go to final ordering stage to send emails
         return HttpResponseRedirect(reverse('inventory:finalize'))
-    return render(request, 'inventory/take-inventory.html', {'item_list': item_list})
+    return render(request, 'inventory/take-inventory.html', {'item_list_shed': item_list_shed, 'item_list_shop': item_list_shop})
 
 
 @login_required
