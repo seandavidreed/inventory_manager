@@ -114,9 +114,20 @@ def analytics(request):
 
 
 @login_required
-def history(request):
-    order_list = Order.objects.all().values('date', 'order_number').distinct().order_by('-order_number')
-    return render(request, 'inventory/order-history.html', {'order_list': order_list})
+def history(request, order=None):
+    if order:
+        latest_orders = Order.objects.filter(date__year=order).values('date', 'order_number').distinct().order_by('-order_number')
+        archive = 0
+    else:
+        latest_orders = Order.objects.all().values('date', 'order_number').distinct().order_by('-order_number')[:20]
+        archive = Order.objects.all().values('date__year').distinct().order_by('-order_number')[20:]
+    return render(request, 'inventory/order-history.html', {'latest_orders': latest_orders, 'archive': archive})
+
+
+@login_required
+def archive(request):
+    orders = Order.objects.all().values_list('date__year', flat=True).distinct()
+    return render(request, 'inventory/archive.html', {'orders': orders})
 
 
 @login_required
