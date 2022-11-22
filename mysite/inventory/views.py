@@ -5,7 +5,14 @@ from django.contrib.auth import get_user_model
 from django.core.mail import EmailMessage
 from django.urls import reverse
 from django.db.models import F
+
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
+
 import datetime
+import io
+import urllib, base64
 
 from .models import Supplier, Item, Order
 from .functions import createPDF
@@ -113,7 +120,20 @@ def empty_order(request):
 
 @login_required
 def analytics(request):
-    return render(request, 'inventory/analytics.html')
+    item_orders = Order.objects.filter(date__month='11').values_list('date__day', 'order_qty')
+    y_value = 0
+    for item in item_orders:
+        x_value = item[0]
+        y_value += item[1]
+    plt.plot([x_value, 12], [y_value, 14])
+    plt.ylabel('order quantity')
+    fig = plt.gcf()
+    buf = io.BytesIO()
+    fig.savefig(buf, format='png')
+    buf.seek(0)
+    string = base64.b64encode(buf.read())
+    uri = urllib.parse.quote(string)
+    return render(request, 'inventory/analytics.html', {'data': uri})
 
 
 @login_required
