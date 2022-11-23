@@ -1,5 +1,6 @@
 function increment(id, mode) {
     var elem = document.getElementById(id);
+    elem.style.color = "#000000";
     if (mode === 'i') {
         elem.value = parseInt(elem.value) + 1;
         return;

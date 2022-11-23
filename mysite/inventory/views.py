@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect, FileResponse
 from django.contrib.auth import get_user_model
 from django.core.mail import EmailMessage
 from django.urls import reverse
-from django.db.models import F
+from django.db.models import F, Sum
 
 from plotly.offline import plot
 import plotly.graph_objects as go
@@ -117,25 +117,44 @@ def empty_order(request):
 
 @login_required
 def analytics(request):
-    ttl_orders = Order.objects.aggregate(sum(filter='order_qty'))
-    
-    months = [
-        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-    ]
 
-    fig = go.Figure()
-    bar = go.Bar(
-        x=months,
-        y=[23, 21, 12, 45, 7, 34, 56, 1, 33, 7, 10, 7],
-        name='Stuff',
-        marker_color='indianred'
-    )
-    fig.add_trace(bar)
-    fig.update_layout(xaxis_tickangle=-45)
-    plt_div = plot(fig, output_type='div')
+    items = Item.objects.all()
+
+    #monthly_order_qty = Order.objects.filter(item_id=7, date__month='11').aggregate(sum=Sum('order_qty'))
     
-    return render(request, 'inventory/analytics.html', {'data': plt_div})
+    if request.method == "POST":
+        month = request.POST['date']
+        product = request.POST['product']
+        monthly_order_qty = list(Order.objects.filter(item_id=product, date__month=month).values_list('order_qty', flat=True).order_by('date'))
+        dates = list(Order.objects.filter(item_id=product, date__month=month).values_list('date', flat=True).order_by('date'))
+        fig = go.Figure()
+        bar = go.Bar(
+            x=dates,
+            y=monthly_order_qty,
+            name='Stuff',
+            marker_color='indianred'
+        )
+        fig.add_trace(bar)
+        fig.update_layout(xaxis_tickangle=-45)
+        plt_div = plot(fig, output_type='div')
+    else:
+        months = [
+            'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+        ]
+
+        fig = go.Figure()
+        bar = go.Bar(
+            x=months,
+            y=[23, 21, 12, 45, 7, 34, 56, 1, 33, 7, 10, 7],
+            name='Stuff',
+            marker_color='indianred'
+        )
+        fig.add_trace(bar)
+        fig.update_layout(xaxis_tickangle=-45)
+        plt_div = plot(fig, output_type='div')
+    
+    return render(request, 'inventory/analytics.html', {'data': plt_div, 'items': items})
 
 
 @login_required

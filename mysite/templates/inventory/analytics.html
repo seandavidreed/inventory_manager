@@ -12,4 +12,33 @@
         {% endautoescape %}
         </div>
     </div>
+    <div class="row justify-content-center">
+        <div class="col">
+            <form action="" method="post">
+            {% csrf_token %}
+                <select name="date">
+                    <option selected disabled>Date</option>
+                    <option value="01">January</option>
+                    <option value="02">February</option>
+                    <option value="03">March</option>
+                    <option value="04">April</option>
+                    <option value="05">May</option>
+                    <option value="06">June</option>
+                    <option value="07">July</option>
+                    <option value="08">August</option>
+                    <option value="09">September</option>
+                    <option value="10">October</option>
+                    <option value="11">November</option>
+                    <option value="12">December</option>
+                </select>
+                <select name="product">
+                    <option selected disabled>Product</option>
+                {% for item in items %}
+                    <option value="{{ item.id }}">{{ item.brand }} {{ item.unit }}</option>
+                {% endfor %}
+                </select>
+                <button type="submit">Go</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}
