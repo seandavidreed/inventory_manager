@@ -6,13 +6,10 @@ from django.core.mail import EmailMessage
 from django.urls import reverse
 from django.db.models import F
 
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-import numpy as np
+from plotly.offline import plot
+import plotly.graph_objects as go
 
 import datetime
-import io
-import urllib, base64
 
 from .models import Supplier, Item, Order
 from .functions import createPDF
@@ -120,20 +117,25 @@ def empty_order(request):
 
 @login_required
 def analytics(request):
-    item_orders = Order.objects.filter(date__month='11').values_list('date__day', 'order_qty')
-    y_value = 0
-    for item in item_orders:
-        x_value = item[0]
-        y_value += item[1]
-    plt.plot([x_value, 12], [y_value, 14])
-    plt.ylabel('order quantity')
-    fig = plt.gcf()
-    buf = io.BytesIO()
-    fig.savefig(buf, format='png')
-    buf.seek(0)
-    string = base64.b64encode(buf.read())
-    uri = urllib.parse.quote(string)
-    return render(request, 'inventory/analytics.html', {'data': uri})
+    ttl_orders = Order.objects.aggregate(sum(filter='order_qty'))
+    
+    months = [
+        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ]
+
+    fig = go.Figure()
+    bar = go.Bar(
+        x=months,
+        y=[23, 21, 12, 45, 7, 34, 56, 1, 33, 7, 10, 7],
+        name='Stuff',
+        marker_color='indianred'
+    )
+    fig.add_trace(bar)
+    fig.update_layout(xaxis_tickangle=-45)
+    plt_div = plot(fig, output_type='div')
+    
+    return render(request, 'inventory/analytics.html', {'data': plt_div})
 
 
 @login_required
