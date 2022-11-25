@@ -9,6 +9,9 @@ from django.db.models import F, Sum
 from plotly.offline import plot
 import plotly.graph_objects as go
 
+import plotly.express as px
+
+
 import datetime
 
 from .models import Supplier, Item, Order
@@ -106,58 +109,6 @@ def finalize(request):
 
 
 @login_required
-def success(request):
-    return render(request, 'inventory/success.html')
-
-
-@login_required
-def empty_order(request):
-    return render(request, 'inventory/empty-order.html')
-
-
-@login_required
-def analytics(request):
-
-    items = Item.objects.all()
-
-    #monthly_order_qty = Order.objects.filter(item_id=7, date__month='11').aggregate(sum=Sum('order_qty'))
-    
-    if request.method == "POST":
-        month = request.POST['date']
-        product = request.POST['product']
-        monthly_order_qty = list(Order.objects.filter(item_id=product, date__month=month).values_list('order_qty', flat=True).order_by('date'))
-        dates = list(Order.objects.filter(item_id=product, date__month=month).values_list('date', flat=True).order_by('date'))
-        fig = go.Figure()
-        bar = go.Bar(
-            x=dates,
-            y=monthly_order_qty,
-            name='Stuff',
-            marker_color='indianred'
-        )
-        fig.add_trace(bar)
-        fig.update_layout(xaxis_tickangle=-45)
-        plt_div = plot(fig, output_type='div')
-    else:
-        months = [
-            'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-        ]
-
-        fig = go.Figure()
-        bar = go.Bar(
-            x=months,
-            y=[23, 21, 12, 45, 7, 34, 56, 1, 33, 7, 10, 7],
-            name='Stuff',
-            marker_color='indianred'
-        )
-        fig.add_trace(bar)
-        fig.update_layout(xaxis_tickangle=-45)
-        plt_div = plot(fig, output_type='div')
-    
-    return render(request, 'inventory/analytics.html', {'data': plt_div, 'items': items})
-
-
-@login_required
 def history(request, order=None):
     if order:
         latest_orders = Order.objects.filter(date__year=order).values('date', 'order_number').distinct().order_by('-order_number')
@@ -183,6 +134,41 @@ def order(request, order_number):
         return FileResponse(pdf, as_attachment=True, filename='order.pdf')
 
     return render(request, 'inventory/order.html', {'orders': orders})
+
+
+@login_required
+def analytics(request):
+    # Get total orders by date
+    total_daily_orders = Order.objects.values('date__day').annotate(sum=Sum('order_qty'))
+    x_values = []
+    y_values = []
+
+    # Organize values from queryset as ordered pairs divided into lists
+    for order in total_daily_orders:
+        x_values.append(order['date__day'])
+        y_values.append(order['sum'])
+
+    # Generate line chart figure
+    fig = px.line(
+        x = x_values,
+        y = y_values,
+        title = 'Total Daily Orders'
+    )
+
+    # Prepare figure to be passed to template
+    chart = fig.to_html()
+
+    return render(request, 'inventory/analytics.html', {'chart': chart})
+
+
+@login_required
+def success(request):
+    return render(request, 'inventory/success.html')
+
+
+@login_required
+def empty_order(request):
+    return render(request, 'inventory/empty-order.html')
 
 
 def login(request):
