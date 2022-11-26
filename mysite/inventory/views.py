@@ -138,8 +138,8 @@ def order(request, order_number):
 
 @login_required
 def analytics(request):
-    # Get total orders by date
-    total_daily_orders = Order.objects.values('date__day').annotate(sum=Sum('order_qty'))
+    # Get total orders for each date for the last 52 order days
+    total_daily_orders = Order.objects.values('date__day').annotate(sum=Sum('order_qty'))[:52]
     x_values = []
     y_values = []
 
@@ -150,9 +150,13 @@ def analytics(request):
 
     # Generate line chart figure
     fig = px.line(
+        data_frame = x_values,
         x = x_values,
         y = y_values,
-        title = 'Total Daily Orders'
+        range_y = [0, 200],
+        labels = {'x': 'Day', 'y': 'Total Order Quantity'},
+        title = 'Total Daily Orders',
+        markers = True
     )
 
     # Prepare figure to be passed to template
