@@ -135,39 +135,73 @@ def order(request, order_number):
 
 @login_required
 def analytics(request):
+    # Fetch all items from the database
+    items = Item.objects.all()
+    product = 0
+
     # DEFAULT: Get total orders for each order date for year-to-date
     current_date = datetime.datetime.now()
+    title = 'Orders: YTD'
+    start_date = current_date - relativedelta(years=1)
+
+    # Frame the data according to user specification
     if request.method == "POST":
-        title = 'Orders: Last Month'
-        start_date = current_date - relativedelta(months=1)
-    else:
-        title = 'Orders: YTD'
-        start_date = current_date - relativedelta(years=1)
+        frame = request.POST['frame']
+        product = request.POST['product']
+        if frame == 'month':
+            title = 'Orders: Last Month'
+            start_date = current_date - relativedelta(months=1)
+        elif frame == 'all-time':
+            title = 'Orders: All Time'
+            start_date = current_date - relativedelta(years=500)
+        
     
-    # Retrieve orders from database according to requested range 
-    orders = Order.objects.filter(date__range=(start_date, current_date)).values('date__month', 'date__day', 'date__year').annotate(sum=Sum('order_qty'))
+    # Retrieve orders from database according to requested range and item
+    if product != '0':
+        orders = Order.objects.filter(date__range=(start_date, current_date), item_id=product).values('date__month', 'date__day', 'date__year')\
+            .annotate(sum=Sum('order_qty')).order_by('date')
+    else:
+        orders = Order.objects.filter(date__range=(start_date, current_date)).values('date__month', 'date__day', 'date__year')\
+            .annotate(sum=Sum('order_qty')).order_by('date')
+    
+    # Organize values from queryset as ordered pairs divided into lists
     x_values = []
     y_values = []
-
-    # Organize values from queryset as ordered pairs divided into lists
     for order in orders:
-        x_values.append(str(order['date__month']) + '/' + str(order['date__day']))
+        x_values.append(str(order['date__month']) + '/' + str(order['date__day']) + '/' + str(order['date__year']))
         y_values.append(order['sum'])
 
     # Generate line chart figure
-    fig = px.bar(
+    fig = px.line(
         data_frame = x_values,
         x = x_values,
         y = y_values,
         range_y = [0, 200],
         labels = {'x': 'Day', 'y': 'Total Order Quantity'},
         title = title,
+        color_discrete_sequence = ['black'],
+        markers = True
+    )
+
+    # Customize the look and feel of the chart
+    fig.update_layout(
+        xaxis = dict(
+            showline = True,
+            showgrid = True,
+            linecolor = 'black'
+        ),
+        yaxis = dict(
+            showline = True,
+            showgrid = True,
+            linecolor = 'black',
+        ),
+        plot_bgcolor = 'white'
     )
 
     # Prepare figure to be passed to template
     chart = fig.to_html()
 
-    return render(request, 'inventory/analytics.html', {'chart': chart})
+    return render(request, 'inventory/analytics.html', {'chart': chart, 'items': items})
 
 
 @login_required
