@@ -6,13 +6,10 @@ from django.core.mail import EmailMessage
 from django.urls import reverse
 from django.db.models import F, Sum
 
-from plotly.offline import plot
-import plotly.graph_objects as go
-
 import plotly.express as px
 
-
 import datetime
+from dateutil.relativedelta import relativedelta
 
 from .models import Supplier, Item, Order
 from .functions import createPDF
@@ -138,25 +135,33 @@ def order(request, order_number):
 
 @login_required
 def analytics(request):
-    # Get total orders for each date for the last 52 order days
-    total_daily_orders = Order.objects.values('date__day').annotate(sum=Sum('order_qty'))[:52]
+    # DEFAULT: Get total orders for each order date for year-to-date
+    current_date = datetime.datetime.now()
+    if request.method == "POST":
+        title = 'Orders: Last Month'
+        start_date = current_date - relativedelta(months=1)
+    else:
+        title = 'Orders: YTD'
+        start_date = current_date - relativedelta(years=1)
+    
+    # Retrieve orders from database according to requested range 
+    orders = Order.objects.filter(date__range=(start_date, current_date)).values('date__month', 'date__day', 'date__year').annotate(sum=Sum('order_qty'))
     x_values = []
     y_values = []
 
     # Organize values from queryset as ordered pairs divided into lists
-    for order in total_daily_orders:
-        x_values.append(order['date__day'])
+    for order in orders:
+        x_values.append(str(order['date__month']) + '/' + str(order['date__day']))
         y_values.append(order['sum'])
 
     # Generate line chart figure
-    fig = px.line(
+    fig = px.bar(
         data_frame = x_values,
         x = x_values,
         y = y_values,
         range_y = [0, 200],
         labels = {'x': 'Day', 'y': 'Total Order Quantity'},
-        title = 'Total Daily Orders',
-        markers = True
+        title = title,
     )
 
     # Prepare figure to be passed to template
