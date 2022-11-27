@@ -17,7 +17,7 @@ class Item(models.Model):
     unit = models.CharField(max_length=50, help_text='Example: Strawberry')
     quota = models.IntegerField(default=0, help_text='The required minimum quantity when restocking has occurred')
     storage = models.CharField(max_length=2, choices=[('A', 'Shed'), ('B', 'Shop')])
-    latest_qty = models.IntegerField(default=0, help_text='The last quantity ordered')
+    latest_qty = models.IntegerField(default=0, editable=False, help_text='The last quantity ordered')
 
     def __str__(self):
         return self.brand + ' ' + self.unit

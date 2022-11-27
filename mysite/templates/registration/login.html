@@ -6,41 +6,41 @@
 
 {% block main %}
     {% load static %}
-    {% if form.errors %}
-        <p>Your username and password didn't match. Please try again.</p>
-    {% endif %}
-
-    {% if next %}
-        {% if user.is_authenticated %}
-            <p>
-                Your account doesn't have access to this page. To proceed,
-                please login with an account that has access.
-            </p>
-        {% else %}
-            <p>Please login to see this page.</p>
+    <div class="login">
+        {% if form.errors %}
+            <p>Your username and password didn't match. Please try again.</p>
         {% endif %}
-    {% endif %}
 
-    <div class="row h-75 py-5 justify-content-center align-items-center">
-        <div class="col-md-4">
-            <form action="{% url 'login' %}" method="post">
-                {% csrf_token %}
-                <div class="form-floating mb-3">
-                    <input autocomplete="off" autofocus="off" type="username" name="{{ form.username.html_name }}" value="{{ form.username.value|default_if_none:'' }}" class="form-control input" id="floatingInput {{ form.username.id_for_label }}" placeholder="Username">
-                    <label for="floatingInput">Username</label>
-                </div>
-                <div class="form-floating mb-3">
-                    <input autocomplete="off" autofocus="off" type="password" name="{{ form.password.html_name }}" value="{{ form.password.value|default_if_none:'' }}" class="form-control input" id="floatingPassword {{ form.password.id_for_label }}" placeholder="Password">
-                    <label for="floatingPassword">Password</label>
-                </div>
-                <div class="d-grid mb-3 input-group">
-                    <button class="btn btn-outline-success" type="submit" value="login">Login</button>
-                    <input type="hidden" name="next" value="{{ next }}">
-                </div>
-            </form>
-            <!--Assumes you set of the password_reset view in your URLconf-->
-            <p><a class="link-light" href="{% url 'admin:index' %}">Login As Admin</a></p>
-            <p><a class="link-light" href="{% url 'password_reset' %}">Forgot Password</a></p>
+        {% if next %}
+            {% if user.is_authenticated %}
+                <p>
+                    Your account doesn't have access to this page. To proceed,
+                    please login with an account that has access.
+                </p>
+            {% endif %}
+        {% endif %}
+        <div class="row d-flex h-100 align-items-center justify-content-center">
+            <div class="col-md-4">
+                <img src="{% static 'images/inventory_logo2.png' %}" style="width: 90%; height: auto;">  
+                <form action="{% url 'login' %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-floating mb-3">
+                        <input autocomplete="off" autofocus="off" type="username" name="{{ form.username.html_name }}" value="{{ form.username.value|default_if_none:'' }}" class="form-control input" id="floatingInput {{ form.username.id_for_label }}" placeholder="Username">
+                        <label for="floatingInput">Username</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input autocomplete="off" autofocus="off" type="password" name="{{ form.password.html_name }}" value="{{ form.password.value|default_if_none:'' }}" class="form-control input" id="floatingPassword {{ form.password.id_for_label }}" placeholder="Password">
+                        <label for="floatingPassword">Password</label>
+                    </div>
+                    <div class="d-grid mb-3 input-group">
+                        <button class="btn btn-outline-success" type="submit" value="login">Login</button>
+                        <input type="hidden" name="next" value="{{ next }}">
+                    </div>
+                </form>
+                <!--Assumes you set of the password_reset view in your URLconf-->
+                <p><a class="link-light" href="{% url 'admin:index' %}">Login As Admin</a></p>
+                <p><a class="link-light" href="{% url 'password_reset' %}">Forgot Password</a></p>
+            </div>
         </div>
     </div>
 {% endblock %}

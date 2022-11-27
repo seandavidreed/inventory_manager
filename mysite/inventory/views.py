@@ -137,7 +137,7 @@ def order(request, order_number):
 def analytics(request):
     # Fetch all items from the database
     items = Item.objects.all()
-    product = 0
+    product = '0'
 
     # DEFAULT: Get total orders for each order date for year-to-date
     current_date = datetime.datetime.now()
@@ -188,12 +188,13 @@ def analytics(request):
         xaxis = dict(
             showline = True,
             showgrid = True,
-            linecolor = 'black'
+            linecolor = 'black',
         ),
         yaxis = dict(
             showline = True,
             showgrid = True,
             linecolor = 'black',
+            dtick = 10
         ),
         plot_bgcolor = 'white'
     )

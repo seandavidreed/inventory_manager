@@ -16,8 +16,8 @@
     <form class="row justify-content-center" action="" method="post">
         {% csrf_token %}
         <div class="col-4">
-            <select class="form-select" name="frame">
-                <option selected disabled>Frame</option>
+            <select class="form-select" name="frame" required>
+                <option value="" selected disabled>Frame</option>
                 <option value="month">Month</option>
                 <option value="ytd">Year To Date</option>
                 <option value="all-time">All Time</option>
