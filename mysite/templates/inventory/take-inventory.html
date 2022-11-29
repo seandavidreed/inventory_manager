@@ -13,7 +13,7 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th colspan="5"><strong>Shed</strong></th>
+                        <th colspan="5"><strong>Shop</strong></th>
                     </tr>
                     <tr>
                         <th>Brand</th>
@@ -23,12 +23,12 @@
                         <th></th>
                     </tr>
                 </thead>
-                {% for item in item_list_shed %}
+                {% for item in item_list_shop %}
                     <tr>
                         <td class="align-middle">{{ item.brand }}</td>
                         <td class="align-middle">{{ item.unit }}</td>
-                        <td class="align-middle">{{ item.quota }}</td>
-                        <td class="align-middle">
+                        <td class="align-middle">{{ item.quota }} {{ item.package }} {{ item.package_qty }}</td>
+                        <td class="d-flex justify-content-center align-middle">
                             <input id="{{ item.id }}" type="text" style="max-width: 60px; color: #AAAAAA;" name="{{ item.id }}" class="form-control" value="{{ item.latest_qty }}" aria-label="Number of items to order">
                         </td>
                         <td class="align-middle">
@@ -40,10 +40,13 @@
                     </tr>
                 {% endfor %}
             </table>
+            {% if not item_list_shop %}
+                <p>Please add inventory items via the Admin page.</p>
+            {% endif %}
             <table class="table">
                 <thead>
                     <tr>
-                        <th colspan="5"><strong>Shop</strong></th>
+                        <th colspan="5"><strong>Shed</strong></th>
                     </tr>
                     <tr>
                         <th>Brand</th>
@@ -54,12 +57,12 @@
                     </tr>
                 </thead>
 
-            {% for item in item_list_shop %}
+            {% for item in item_list_shed %}
                 <tr>
                     <td class="align-middle">{{ item.brand }}</td>
                     <td class="align-middle">{{ item.unit }}</td>
-                    <td class="align-middle">{{ item.quota }}</td>
-                    <td class="align-middle">
+                    <td class="align-middle">{{ item.quota }} {{ item.package }}</td>
+                    <td class="d-flex justify-content-center align-middle">
                         <input id="{{ item.id }}" type="text" style="max-width: 60px; color: #AAAAAA;" name="{{ item.id }}" class="form-control" value="{{ item.latest_qty }}" aria-label="Number of items to order">
                     </td>
                     <td class="align-middle">
@@ -72,10 +75,13 @@
             {% endfor %}
                     
             </table>
-            {% if item_list_shed or item_list_shop %}
-                <button type="submit" class="btn btn-outline-success">Continue</button>
-            {% else %}
+
+            {% if not item_list_shed %}
                 <p>Please add inventory items via the Admin page.</p>
+            {% endif %}
+
+            {% if item_list_shop or item_list_shed %}
+                <button type="submit" class="btn btn-outline-success">Continue</button>
             {% endif %}
             </form>
         </div>

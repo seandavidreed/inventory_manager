@@ -1,5 +1,9 @@
 from unicodedata import name
 from django.db import models
+from django.db.models import Q
+from django.db.models.functions import Length
+
+models.CharField.register_lookup(Length)
 
 # Create your models here.
 class Supplier(models.Model):
@@ -12,12 +16,22 @@ class Supplier(models.Model):
 
 
 class Item(models.Model):
-    supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
+    supplier = models.ForeignKey(Supplier, on_delete=models.DO_NOTHING)
     brand = models.CharField(max_length=50, help_text='Example: Torani')
     unit = models.CharField(max_length=50, help_text='Example: Strawberry')
+    package = models.CharField(default='', blank=True, max_length=4, choices=[('BX', 'Box(es)'), ('C', 'Case(s)'), ('CRT', 'Carton(s)')])
+    package_qty = models.IntegerField(default=0, help_text='Quantity of unit per package')
     quota = models.IntegerField(default=0, help_text='The required minimum quantity when restocking has occurred')
     storage = models.CharField(max_length=2, choices=[('A', 'Shed'), ('B', 'Shop')])
     latest_qty = models.IntegerField(default=0, editable=False, help_text='The last quantity ordered')
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                check=(Q(package__length__lt=1, package_qty__lt=1) | Q(package__length__gt=0, package_qty__gt=0)), 
+                name='packaging'
+            )
+        ]
 
     def __str__(self):
         return self.brand + ' ' + self.unit
