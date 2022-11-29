@@ -176,11 +176,10 @@ def analytics(request):
         data_frame = x_values,
         x = x_values,
         y = y_values,
-        range_y = [0, 200],
         labels = {'x': 'Day', 'y': 'Total Order Quantity'},
         title = title,
         color_discrete_sequence = ['black'],
-        markers = True
+        markers = True,
     )
 
     # Customize the look and feel of the chart
@@ -194,13 +193,14 @@ def analytics(request):
             showline = True,
             showgrid = True,
             linecolor = 'black',
-            dtick = 10
+            dtick = 1
         ),
-        plot_bgcolor = 'white'
+        plot_bgcolor = 'white',
+        modebar_remove = ['select', 'lasso', 'pan', 'zoomin', 'zoomout', 'autoscale']
     )
 
     # Prepare figure to be passed to template
-    chart = fig.to_html()
+    chart = fig.to_html(config={'displaylogo': False})
 
     return render(request, 'inventory/analytics.html', {'chart': chart, 'items': items})
 

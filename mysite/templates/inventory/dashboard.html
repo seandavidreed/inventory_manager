@@ -1,43 +1,43 @@
 {% extends "inventory/layout.html" %}
 
 {% block title %}
-    Dashboard
+    <title>Dashboard</title>
 {% endblock %}
 
 {% block main %}
     {% load static %}
             {% if user.is_authenticated %}
-            <div class="row justify-content-center pt-5 pb-3">
-                <div class="col-md-4">
-                    <a href="{% url 'inventory:shop' %}">
+            <div class="row justify-content-center my-5">
+                <div class="col-sm-6">
+                    <a href="{% url 'inventory:take-inventory' %}">
                     <div class="card bg-dark text-white border-0">
                         <img src="{% static 'images/inventory.jpg' %}" class="card-img" alt="...">
                         <div class="card-img-overlay d-flex justify-content-center align-items-center">
-                            <h2 class="card-title">Inventory</h3>
+                            <h1 class="card-title">Inventory</h1>
                         </div>
                     </div>
                     </a>
                 </div>
             </div>
-            <div class="row justify-content-center py-3">
-                <div class="col-md-4">
+            <div class="row justify-content-center my-5">
+                <div class="col-sm-6">
                     <a href="{% url 'inventory:history' %}">
                     <div class="card bg-dark text-white border-0">
                         <img src="{% static 'images/history.jpg' %}" class="card-img" alt="...">
                         <div class="card-img-overlay d-flex justify-content-center align-items-center">
-                            <h2 class="card-title">History</h3>
+                            <h1 class="card-title">History</h1>
                         </div>
                     </div>
                     </a>
                 </div>
             </div>
-            <div class="row justify-content-center py-3">
-                <div class="col-md-4">
+            <div class="row justify-content-center my-5">
+                <div class="col-sm-6">
                     <a href="{% url 'inventory:analytics' %}">
                     <div class="card bg-dark text-white border-0">
                         <img src="{% static 'images/analytics.jpg' %}" class="card-img" alt="...">
                         <div class="card-img-overlay d-flex justify-content-center align-items-center">
-                            <h2 class="card-title">Analytics</h3>
+                            <h1 class="card-title">Analytics</h1>
                         </div>
                     </div>
                     </a>

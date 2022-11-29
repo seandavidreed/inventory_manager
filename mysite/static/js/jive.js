@@ -18,3 +18,12 @@ function check_qty(id) {
         elem.style.color = "#CCCCCC";
     }
 }
+
+function toggle_display(page) {
+    var elements = document.getElementsByClassName("toggle");
+    for (let i = 0; i < elements.length; i++) {
+        if (elements[i].innerHTML != page) {
+            elements[i].style.display = "block";
+        }
+    }
+}
