@@ -2,7 +2,7 @@ import io
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
-import datetime
+from datetime import datetime
 
 from .models import Order
 
@@ -16,9 +16,9 @@ def createPDF(order_number=None, supplier=None, orders=None):
         orders = Order.objects.filter(order_number=order_number, item__supplier__name=supplier).exclude(order_qty=0)
         if not orders:
             return None
-        order_date = str(datetime.datetime.now())
+        order_date = datetime.now().strftime("%m/%d/%Y")
     elif orders:
-        order_date = str(orders[0].date)
+        order_date = datetime.strftime(orders[0].date, "%m/%d/%Y")
     else:
         raise Exception('Improperly supplied arguments!' \
             ' Usage: use order_number and supplier together for email attachment; use orders alone for order history download')
@@ -30,7 +30,7 @@ def createPDF(order_number=None, supplier=None, orders=None):
     # Create a canvas
     p = canvas.Canvas(buffer, pagesize=letter, bottomup=0)
 
-    for thing in orders:
+    for order in orders:
         if b is True:
             # Create a text object
             textob = p.beginText()
@@ -58,9 +58,10 @@ def createPDF(order_number=None, supplier=None, orders=None):
 
         # Populate document with data from database
         textob.setFont("Courier", 12)
-        textob.textOut(str(thing.item))
+        textob.textOut(str(order.item))
         textob.moveCursor(5*inch, 0)
-        textob.textOut(str(thing.order_qty))
+        textob.textOut(str(order.order_qty))
+        textob.textOut(' ' + str(order.item.package))
         textob.moveCursor(-5*inch, 0)
         textob.textLine()
         if textob.getCursor()[1] >= 712:

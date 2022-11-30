@@ -8,7 +8,7 @@ from django.db.models import F, Sum
 
 import plotly.express as px
 
-import datetime
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from .models import Supplier, Item, Order
@@ -77,7 +77,7 @@ def finalize(request):
         # Retrieve order data from session and save it to database
         # Update latest quantity for each item, taking the average of the last two order quantities
         for order in request.session['orders']:
-            Order.objects.create(item_id=order[0], date=datetime.datetime.now(), order_qty=order[1], order_number=order_number)
+            Order.objects.create(item_id=order[0], date=datetime.now(), order_qty=order[1], order_number=order_number)
             Item.objects.filter(id=order[0]).update(latest_qty = (F('latest_qty') + order[1]) / 2)
 
         # Get Administrator's Email Address
@@ -138,10 +138,12 @@ def analytics(request):
     # Fetch all items from the database
     items = Item.objects.all()
     product = '0'
+    package = None
 
     # DEFAULT: Get total orders for each order date for year-to-date
-    current_date = datetime.datetime.now()
+    current_date = datetime.now()
     title = 'Orders: YTD'
+    subtitle = ''
     start_date = current_date - relativedelta(years=1)
 
     # Frame the data according to user specification
@@ -158,17 +160,23 @@ def analytics(request):
     
     # Retrieve orders from database according to requested range and item
     if product != '0':
-        orders = Order.objects.filter(date__range=(start_date, current_date), item_id=product).values('date__month', 'date__day', 'date__year')\
+        orders = Order.objects.filter(date__range=(start_date, current_date), item_id=product).values('date')\
             .annotate(sum=Sum('order_qty')).order_by('date')
+        package = Item.objects.get(pk=product)
+        if package.package:
+            subtitle = ' - {} {}: {} of {} ea.'.format(package.brand, package.unit, package.package, package.package_qty)
+        else:
+            subtitle = ' - {} {}'.format(package.brand, package.unit)
+            
     else:
-        orders = Order.objects.filter(date__range=(start_date, current_date)).values('date__month', 'date__day', 'date__year')\
+        orders = Order.objects.filter(date__range=(start_date, current_date)).values('date')\
             .annotate(sum=Sum('order_qty')).order_by('date')
     
     # Organize values from queryset as ordered pairs divided into lists
     x_values = []
     y_values = []
     for order in orders:
-        x_values.append(str(order['date__month']) + '/' + str(order['date__day']) + '/' + str(order['date__year']))
+        x_values.append(datetime.strftime(order['date'], "%m/%d/%Y"))
         y_values.append(order['sum'])
 
     # Generate line chart figure
@@ -177,7 +185,7 @@ def analytics(request):
         x = x_values,
         y = y_values,
         labels = {'x': 'Day', 'y': 'Total Order Quantity'},
-        title = title,
+        title = title + subtitle,
         color_discrete_sequence = ['black'],
         markers = True,
     )
@@ -202,7 +210,7 @@ def analytics(request):
     # Prepare figure to be passed to template
     chart = fig.to_html(config={'displaylogo': False})
 
-    return render(request, 'inventory/analytics.html', {'chart': chart, 'items': items})
+    return render(request, 'inventory/analytics.html', {'chart': chart, 'items': items, 'package': package})
 
 
 @login_required

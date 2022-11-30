@@ -19,7 +19,7 @@ class Item(models.Model):
     supplier = models.ForeignKey(Supplier, on_delete=models.DO_NOTHING)
     brand = models.CharField(max_length=50, help_text='Example: Torani')
     unit = models.CharField(max_length=50, help_text='Example: Strawberry')
-    package = models.CharField(default='', blank=True, max_length=4, choices=[('BX', 'Box(es)'), ('C', 'Case(s)'), ('CRT', 'Carton(s)')])
+    package = models.CharField(default='', blank=True, max_length=10, choices=[('box(es)', 'Box(es)'), ('case(s)', 'Case(s)'), ('carton(s)', 'Carton(s)')])
     package_qty = models.IntegerField(default=0, help_text='Quantity of unit per package')
     quota = models.IntegerField(default=0, help_text='The required minimum quantity when restocking has occurred')
     storage = models.CharField(max_length=2, choices=[('A', 'Shed'), ('B', 'Shop')])
@@ -28,7 +28,7 @@ class Item(models.Model):
     class Meta:
         constraints = [
             models.CheckConstraint(
-                check=(Q(package__length__lt=1, package_qty__lt=1) | Q(package__length__gt=0, package_qty__gt=0)), 
+                check=(Q(package__length=0, package_qty=0) | Q(package__length__gt=0, package_qty__gt=0)), 
                 name='packaging'
             )
         ]
