@@ -65,6 +65,10 @@ def take_inventory(request):
 
 @login_required
 def finalize(request):
+    #  # TEST FEATURE: FIGURE OUT HOW TO MAKE THIS WORK
+    # if request.POST.get('preview'):
+    #     return FileResponse(pdf, as_attachment=True, filename='order.pdf')
+    # # END TEST FEATURE
     if request.method == "POST":
 
         # Get most recent order number
@@ -91,15 +95,17 @@ def finalize(request):
             message = request.POST[supplier]
             # Generate PDF with supplier's items of non-zero order_qty
             pdf = createPDF(order_number=order_number, supplier=supplier)
+            # Handle function usage errors
             if pdf is None:
                 continue
+            
             email = EmailMessage(
                 subject='Order Form',
                 body=message,
                 from_email=email,
                 to=[supplier_info.email],
             )
-            email.attach(supplier + '_order.pdf', pdf, 'application/pdf')
+            email.attach(supplier + '_order.pdf', pdf.getvalue(), 'application/pdf')
             email.send(fail_silently=False)
         return HttpResponseRedirect(reverse('inventory:success'))
     return render(request, 'inventory/finalize.html', {'supplier_list': request.session['suppliers']})
@@ -201,7 +207,6 @@ def analytics(request):
             showline = True,
             showgrid = True,
             linecolor = 'black',
-            dtick = 1
         ),
         plot_bgcolor = 'white',
         modebar_remove = ['select', 'lasso', 'pan', 'zoomin', 'zoomout', 'autoscale']

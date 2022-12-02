@@ -27,8 +27,8 @@
                     <tr>
                         <td class="align-middle">{{ item.brand }}</td>
                         <td class="align-middle">{{ item.unit }}</td>
-                        <td class="align-middle">{{ item.quota }} {{ item.package }} {{ item.package_qty }}</td>
-                        <td class="d-flex justify-content-center align-middle">
+                        <td class="align-middle">{{ item.quota }} {{ item.package }}</td>
+                        <td class="justify-content-center align-middle">
                             <input id="{{ item.id }}" type="text" style="max-width: 60px; color: #AAAAAA;" name="{{ item.id }}" class="form-control" value="{{ item.latest_qty }}" aria-label="Number of items to order">
                         </td>
                         <td class="align-middle">
@@ -62,7 +62,7 @@
                     <td class="align-middle">{{ item.brand }}</td>
                     <td class="align-middle">{{ item.unit }}</td>
                     <td class="align-middle">{{ item.quota }} {{ item.package }}</td>
-                    <td class="d-flex justify-content-center align-middle">
+                    <td class="align-middle">
                         <input id="{{ item.id }}" type="text" style="max-width: 60px; color: #AAAAAA;" name="{{ item.id }}" class="form-control" value="{{ item.latest_qty }}" aria-label="Number of items to order">
                     </td>
                     <td class="align-middle">

@@ -10,9 +10,7 @@ def createPDF(order_number=None, supplier=None, orders=None):
     # Order Number and Supplier arguments are provided when function is used to attach PDF to email.
     # Orders argument is provided when function is used to download order history.
     # If function is used improperly, an exception is raised
-    as_email = False
     if order_number and supplier:
-        as_email = True
         orders = Order.objects.filter(order_number=order_number, item__supplier__name=supplier).exclude(order_qty=0)
         if not orders:
             return None
@@ -75,7 +73,5 @@ def createPDF(order_number=None, supplier=None, orders=None):
     p.save()
 
     buffer.seek(0)
-    if as_email is True:
-        return buffer.getvalue()
-    else:
-        return buffer
+    
+    return buffer
