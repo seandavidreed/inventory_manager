@@ -34,13 +34,13 @@ ALLOWED_HOSTS = ['10.0.0.183', '127.0.0.1', '10.1.10.184', '172.20.10.2']
 # Application definition
 
 INSTALLED_APPS = [
-    'inventory.apps.InventoryConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'inventory.apps.InventoryConfig',
 ]
 
 MIDDLEWARE = [

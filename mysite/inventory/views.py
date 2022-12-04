@@ -184,6 +184,10 @@ def analytics(request):
     else:
         orders = Order.objects.filter(date__range=(start_date, current_date)).values('date')\
             .annotate(sum=Sum('order_qty')).order_by('date')
+
+    # If there are no orders, redirect
+    if not orders:
+        return HttpResponseRedirect(reverse('inventory:nodata'))
     
     # Organize values from queryset as ordered pairs divided into lists
     x_values = []
@@ -225,19 +229,14 @@ def analytics(request):
     return render(request, 'inventory/analytics.html', {'chart': chart, 'items': items, 'package': package})
 
 
-@login_required
-def success(request):
-    return render(request, 'inventory/success.html')
+def delete(request):
+    if request.method == "POST":
+        if request.POST.get('response') == 'yes':
+            Order.objects.all().delete()
+            Item.objects.all().delete()
+            Supplier.objects.all().delete()
+            return HttpResponseRedirect(reverse('inventory:delete-occurred'))
+        
+        return HttpResponseRedirect(reverse('inventory:dashboard'))
 
-
-@login_required
-def empty_order(request):
-    return render(request, 'inventory/empty-order.html')
-
-
-def login(request):
-    return render(request, 'inventory/login.html')
-
-
-def dashboard(request):
-    return render(request, 'inventory/dashboard.html')
+    return render(request, 'inventory/delete.html')
