@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, FileResponse
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from django.urls import reverse
-from django.db.models import F, Sum
+from django.db.models import F, Sum, Avg
 
 import plotly.express as px
 
@@ -65,32 +65,32 @@ def take_inventory(request):
 
 @login_required
 def finalize(request):
-    #  # TEST FEATURE: FIGURE OUT HOW TO MAKE THIS WORK
-    # if request.POST.get('preview'):
-    #     return FileResponse(pdf, as_attachment=True, filename='order.pdf')
-    # # END TEST FEATURE
     if request.method == "POST":
 
-        # Get most recent order number
+        # Get most recent order number and add 1 for new order number
         try:
             order_number = Order.objects.values_list('order_number', flat=True).latest('order_number') + 1
         except:
             order_number = 1
         
-
         # Retrieve order data from session and save it to database
-        # Update latest quantity for each item, taking the average of the last two order quantities
+        # Update latest quantity for each item, taking the average of the last five order quantities
         for order in request.session['orders']:
             Order.objects.create(item_id=order[0], date=datetime.now(), order_qty=order[1], order_number=order_number)
-            Item.objects.filter(id=order[0]).update(latest_qty = (F('latest_qty') + order[1]) / 2)
+            last_five_avg = Order.objects.filter(item_id=order[0]).order_by('-id')[:5].aggregate(avg=Avg('order_qty'))
+            Item.objects.filter(id=order[0]).update(latest_qty = last_five_avg.get('avg'))
 
         # Get Administrator's Email Address
-        email = get_user_model().objects.filter(is_superuser=True).values_list('email', flat=True).first()
+        user = User.objects.get(pk=1)
 
-
+        # Retrieve supplier data from session and generate email for each supplier
         for supplier in request.session['suppliers']:
             # Get data associated with supplier from supplier table (Email, Phone)
             supplier_info = Supplier.objects.get(name=supplier)
+            if supplier_info.send_email is True:
+                recipient = supplier_info.email
+            else:
+                recipient = user.email
             # Get email message addressed to supplier from post request
             message = request.POST[supplier]
             # Generate PDF with supplier's items of non-zero order_qty
@@ -102,8 +102,8 @@ def finalize(request):
             email = EmailMessage(
                 subject='Order Form',
                 body=message,
-                from_email=email,
-                to=[supplier_info.email],
+                from_email=user.email,
+                to=[recipient],
             )
             email.attach(supplier + '_order.pdf', pdf.getvalue(), 'application/pdf')
             email.send(fail_silently=False)
