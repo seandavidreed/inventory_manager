@@ -11,11 +11,17 @@
                 <h2>Are you sure you want to delete everything?</h2>
                 <form action="" method="post">
                 {% csrf_token %}
-                    <button name="response" value="yes" type="submit" class="btn btn-danger">Yes</button>
-                    <button name="response" value="no" type="submit" class="btn btn-success">No</button>
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" required>
-                        <label class="form-check-label link-light" for="flexSwitchCheckDefault">Confirm Decision</label>
+                    <div class="row d-flex justify-content-center align-items-center">
+                        <div class="col">
+                            <button name="response" value="yes" type="submit" class="btn btn-danger">Yes, destroy it!</button>
+                        </div>
+                        <div class="col">
+                            <button name="response" value="no" type="submit" class="btn btn-success">No, back to safety.</button>
+                        </div>
+                    </div>
+                    <div class="form-check form-switch d-flex justify-content-center m-5">
+                        <input class="form-check-input me-3" type="checkbox" role="switch" id="flexSwitchCheckDefault" required>
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Verify</label>
                     </div>
                 </form>
             </div>
