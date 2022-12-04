@@ -12,7 +12,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from .models import Supplier, Item, Order
-from .functions import createPDF
+from .functions import createPDF, createCSV
 
 # Create your views here.
 @login_required
@@ -114,11 +114,15 @@ def finalize(request):
 @login_required
 def history(request, order=None):
     if order:
-        latest_orders = Order.objects.filter(date__year=order).values('date', 'order_number').distinct().order_by('-order_number')
+        latest_orders = Order.objects.filter(date__year=order).distinct().order_by('-order_number')
         archive = 0
     else:
         latest_orders = Order.objects.all().values('date', 'order_number').distinct().order_by('-order_number')[:20]
         archive = Order.objects.all().values('date__year').distinct().order_by('-order_number')[20:]
+
+    if request.method == "POST":
+        return createCSV()
+
     return render(request, 'inventory/order-history.html', {'latest_orders': latest_orders, 'archive': archive})
 
 
@@ -133,8 +137,11 @@ def order(request, order_number):
     orders = Order.objects.filter(order_number=order_number)
 
     if request.method == "POST":
-        pdf = createPDF(orders=orders)
-        return FileResponse(pdf, as_attachment=True, filename='order.pdf')
+        if request.POST.get('csv'):
+            return createCSV(order_number)
+        else:
+            pdf = createPDF(orders=orders)
+            return FileResponse(pdf, as_attachment=True, filename='order.pdf')
 
     return render(request, 'inventory/order.html', {'orders': orders})
 

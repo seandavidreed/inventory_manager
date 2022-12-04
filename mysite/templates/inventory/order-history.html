@@ -27,5 +27,10 @@
                 {% endif %}
             {% if not latest_orders %}
                 <p>No orders to display.</p>
+            {% else %}
+                <form action="" method="post">
+                {% csrf_token %}
+                    <button class="btn btn-info btn-sm" type="submit">Download as CSV</button>
+                </form>
             {% endif %}
 {% endblock %}

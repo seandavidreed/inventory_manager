@@ -2,6 +2,10 @@ import io
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
+
+from django.http import HttpResponse, FileResponse
+import csv
+
 from datetime import datetime
 
 from .models import Order
@@ -75,3 +79,27 @@ def createPDF(order_number=None, supplier=None, orders=None):
     buffer.seek(0)
     
     return buffer
+
+
+def createCSV(order_number=None):
+    # Prepare httpresponse object to write csv file
+    response = HttpResponse(
+        content_type='text/csv',
+        headers={'Content-Disposition': 'attachment; filename="history.csv"'}
+    )
+
+    # kwarg determines scope of the function - how much order data to return
+    if order_number:
+        orders = Order.objects.filter(order_number=order_number)
+    else:
+        orders = Order.objects.all()
+
+    # Write headers to csv
+    writer = csv.writer(response)
+    writer.writerow(['Date', 'Order Number', 'Item', 'Qty'])
+
+    # Write each row of order data
+    for order in orders:
+        writer.writerow([order.date, order.order_number, order.item, order.order_qty])
+    
+    return response
