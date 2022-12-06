@@ -12,7 +12,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from .models import Supplier, Item, Order
-from .functions import createPDF, createCSV
+from .functions import createPDF, createCSV, readCSV
 
 # Create your views here.
 @login_required
@@ -240,3 +240,10 @@ def delete(request):
         return HttpResponseRedirect(reverse('inventory:dashboard'))
 
     return render(request, 'inventory/delete.html')
+
+
+def alldata(request):
+    if request.method == "POST":
+        readCSV()
+        return None
+    return createCSV(all_models=True)

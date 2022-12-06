@@ -15,7 +15,17 @@
                 <a href="{% url 'inventory:delete' %}"><button class="btn btn-sm btn-danger">Delete Everything</button></a>
             </div>
             <div class="col d-flex justify-content-center">
-                <button class="btn btn-sm btn-info">Download All as CSV</button>
+                <a href="{% url 'inventory:alldata' %}"><button type="submit" name="csv" value="csv" class="btn btn-sm btn-info">Download All as CSV</button></a>
+            </div>
+            <div class="col d-flex justify-content-center">
+                <form action="/inventory/csv/" enctype="multipart/form-data" method="post">
+                {% csrf_token %}
+                    <span>
+                        Upload CSV
+                        <input type="file" name="file" accept="text/csv">
+                        <button type="submit">Upload</button>
+                    </span>
+                </form>
             </div>
         </div>
     </div>

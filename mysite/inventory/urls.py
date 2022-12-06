@@ -18,4 +18,5 @@ urlpatterns = [
     path('finalize/', views.finalize, name='finalize'),
     path('analytics/', views.analytics, name='analytics'),
     path('delete-everything/', views.delete, name='delete'),
+    path('csv/', views.alldata, name='alldata'),
 ]
