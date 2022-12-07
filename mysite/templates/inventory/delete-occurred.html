@@ -6,10 +6,10 @@
 
 {% block main %}
     {% load static %}
-        <div class="row justify-content-center py-5">
+        <div class="login d-flex row justify-content-center align-items-center">
             <div class="col-lg-4">
                 <h2>All Items Deleted</h2>
-                <a class="link-dark" href="{% url 'inventory:dashboard' %}">Return to Dashboard</a>
+                <a class="link-dark" href="{% url 'inventory:dashboard' %}"><button class="btn btn-outline-secondary">Return to Dashboard</button></a>
             </div>
         </div>
 {% endblock %}
