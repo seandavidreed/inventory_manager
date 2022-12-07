@@ -18,11 +18,11 @@
                 <a href="{% url 'inventory:alldata' %}"><button type="submit" name="csv" value="csv" class="btn btn-sm btn-info">Download All as CSV</button></a>
             </div>
             <div class="col d-flex justify-content-center">
-                <form action="/inventory/csv/" enctype="multipart/form-data" method="post">
+                <form action="{% url 'inventory:alldata' %}" enctype="multipart/form-data" method="post">
                 {% csrf_token %}
                     <span>
                         Upload CSV
-                        <input type="file" name="file" accept="text/csv">
+                        <input type="file" id="csv_file" name="csv_file" required="true" accept=".csv">
                         <button type="submit">Upload</button>
                     </span>
                 </form>

@@ -17,7 +17,7 @@
                 </thead>
                 {% for order in orders %}
                     <tr>
-                        <td class="align-middle">{{ order.item }}</td>
+                        <td class="align-middle">{{ order.item.brand }} {{ order.item.unit }}</td>
                         <td id="{{ order.item }}" class="align-middle">{{ order.order_qty }} {{order.item.package }}</td>
                         <script>check_qty("{{ order.item }}")</script>
                     </tr>

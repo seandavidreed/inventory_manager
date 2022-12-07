@@ -244,6 +244,7 @@ def delete(request):
 
 def alldata(request):
     if request.method == "POST":
-        readCSV()
-        return None
+        fileitem = request.FILES['csv_file']
+        readCSV(fileitem)
+        return HttpResponseRedirect(reverse('inventory:dashboard'))
     return createCSV(all_models=True)

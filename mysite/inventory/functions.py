@@ -4,9 +4,9 @@ from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
 
 from django.http import HttpResponse, FileResponse
-import csv, os, cgi, cgitb; cgitb.enable()
+import csv, re
 
-from datetime import datetime
+import datetime
 
 from .models import Supplier, Item, Order
 
@@ -18,9 +18,9 @@ def createPDF(order_number=None, supplier=None, orders=None):
         orders = Order.objects.filter(order_number=order_number, item__supplier__name=supplier).exclude(order_qty=0)
         if not orders:
             return None
-        order_date = datetime.now().strftime("%m/%d/%Y")
+        order_date = datetime.datetime.now().strftime("%m/%d/%Y")
     elif orders:
-        order_date = datetime.strftime(orders[0].date, "%m/%d/%Y")
+        order_date = datetime.datetime.strftime(orders[0].date, "%m/%d/%Y")
     else:
         raise Exception('Improperly supplied arguments!' \
             ' Usage: use order_number and supplier together for email attachment; use orders alone for order history download')
@@ -60,7 +60,7 @@ def createPDF(order_number=None, supplier=None, orders=None):
 
         # Populate document with data from database
         textob.setFont("Courier", 12)
-        textob.textOut(str(order.item))
+        textob.textOut(str(order.item.brand + ' ' + order.item.unit))
         textob.moveCursor(5*inch, 0)
         textob.textOut(str(order.order_qty))
         textob.textOut(' ' + str(order.item.package))
@@ -116,48 +116,58 @@ def createCSV(order_number=None, all_models=False):
     # Write data from Order models
     writer.writerow([])
     writer.writerow(['ORDERS'])
-    writer.writerow(['Date', 'Order Number', 'Item', 'Qty'])
+    writer.writerow(['Brand', 'Unit', 'Date', 'Order Number', 'Qty'])
     for order in orders:
-        writer.writerow([order.date, order.order_number, order.item, order.order_qty])
+        writer.writerow([order.item.brand, order.item.unit, order.date, order.order_number, order.order_qty])
 
     return response
 
 
-def readCSV():
+def readCSV(fileitem):
 
-    form = cgi.FieldStorage()
-    fileitem = form['file']
+    fileitem.seek(0)
+    fileitem = fileitem.read().decode('utf-8')
+    rows = fileitem.split('\r\n')
+    active_table = 0
 
-    # Test if the file was opened
-    if fileitem.filename:
-        fn = os.path.basename(fileitem.filename.replace('\', '/''))
-        open('/tmp/' + fn , 'wb').write(fileitem.file.read())
-        message = 'The file "' + fn + '" was uploaded successfully'
-    else:
-        message = 'No file was uploaded'
-
-
-    with open(fileitem, 'r') as file:
-        csv = csv.reader(file)
-        active_table = 0
-        for row in csv:
-            if row[0] == '':
-                continue
-            elif  row[0] == 'SUPPLIERS' or 'Name':
-                active_table = 0
-                continue
-            elif row[0] == 'ITEMS' or 'Supplier':
-                active_table = 1
-                continue
-            elif row[0] == 'ORDERS' or 'Date':
-                active_table = 2
-                continue
-            
-            if active_table == 0:
-                Supplier.objects.create(name=row[0], email=row[1], send_email=row[2], phone=row[3])
-            elif active_table == 1:
-                Item.objects.create(supplier=row[0], brand=row[1], unit=row[2], package=row[3], package_qty=row[4], quota=row[5], storage=row[6], latest_qty=row[7])
-            else:
-                Order.objects.create(item=row[0], date=row[1], order_number=row[2], order_qty=row[3])
+    for row in rows:
+        fields = row.split(',')
+        if fields[0] == '':
+            continue
+        elif fields[0] == 'SUPPLIERS' or fields[0] == 'Name':
+            active_table = 0
+            continue
+        elif fields[0] == 'ITEMS' or fields[0] == 'Supplier':
+            active_table = 1
+            continue
+        elif fields[0]  == 'ORDERS' or fields[0] == 'Brand':
+            active_table = 2
+            continue
+        
+        if active_table == 0:
+            new_supplier = Supplier(name=fields[0], email=fields[1], send_email=fields[2], phone=fields[3])
+            new_item = Item(supplier=new_supplier)
+            new_supplier.save()
+            new_item.save()
+        elif active_table == 1:
+            item = Item.objects.get(supplier__name=fields[0])
+            item.brand = fields[1]
+            item.unit = fields[2]
+            item.package = fields[3]
+            item.package_qty = fields[4]
+            item.quota = fields[5]
+            item.storage = fields[6]
+            item.latest_qty = fields[7]
+            new_order = Order(item=item, date=datetime.datetime.now())
+            item.save()
+            new_order.save()
+        else:
+            print(fields[2])
+            order = Order.objects.get(item__id=item.id)
+            date = datetime.datetime.strptime(fields[2], "%Y-%m-%d")
+            order.date = datetime.date.strftime(date, "%Y-%m-%d")
+            order.order_number = fields[3]
+            order.order_qty = fields[4]
+            order.save()
             
     return None
