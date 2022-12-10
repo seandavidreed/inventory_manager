@@ -5,6 +5,10 @@
 {% endblock %}
 
 {% block main %}
-    <p>You are logged out.</p>
-    <a href="{% url 'login' %}">Click here to login.</a>
+    <div class="login d-flex row justify-content-center align-items-center">
+        <div class="col-lg-4">
+            <p>You are logged out.</p>
+            <a class="link-dark" href="{% url 'login' %}"><button class="btn btn-outline-secondary">Login</button></a>
+        </div>
+    </div>
 {% endblock %}

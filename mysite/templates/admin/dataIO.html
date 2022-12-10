@@ -17,17 +17,23 @@
             <li class="list-group-item d-flex justify-content-center">
                 <form action="{% url 'inventory:alldata' %}" enctype="multipart/form-data" method="post">
                 {% csrf_token %}
+                    {% if user.is_superuser %}
                     <div class="d-flex row justify-content-center">
                         <input type="file" id="csv_file" name="csv_file" required="true" accept=".csv">
                     </div>
-                    <div class="d-flex row justify-content-center">
-                        <input type="submit">
+                    <div class="d-flex row-cols-2 justify-content-center">
+                        <button type="submit" class="btn btn-sm btn-success">Upload</button>
                     </div>
+                    {% endif %}
                 </form>
             </li>
+
+            {% if user.is_superuser %}
             <li class="list-group-item d-flex justify-content-center">
                 <a href="{% url 'inventory:delete' %}"><button class="btn btn-sm btn-danger">Delete Everything</button></a>
             </li>
+            {% endif %}
+
         </div>
     </div>
 </div>
