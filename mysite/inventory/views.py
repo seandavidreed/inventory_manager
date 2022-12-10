@@ -149,7 +149,7 @@ def order(request, order_number):
 @login_required
 def analytics(request):
     # Fetch all items from the database
-    items = Item.objects.all()
+    items = Item.objects.all().order_by('unit')
     product = '0'
     package = None
 
@@ -173,7 +173,7 @@ def analytics(request):
     
     # Retrieve orders from database according to requested range and item
     if product != '0':
-        orders = Order.objects.filter(date__range=(start_date, current_date), item_id=product).values('date')\
+        orders = Order.objects.filter(date__range=(start_date, current_date), item_id=product).exclude(order_qty=0).values('date')\
             .annotate(sum=Sum('order_qty')).order_by('date')
         package = Item.objects.get(pk=product)
         if package.package:

@@ -18,9 +18,9 @@ class Supplier(models.Model):
 
 class Item(models.Model):
     supplier = models.ForeignKey(Supplier, on_delete=models.DO_NOTHING)
-    brand = models.CharField(max_length=50, help_text='Example: Torani')
-    unit = models.CharField(max_length=50, help_text='Example: Strawberry')
-    package = models.CharField(default='', blank=True, max_length=10, choices=[('box(es)', 'Box(es)'), ('case(s)', 'Case(s)'), ('carton(s)', 'Carton(s)')])
+    brand = models.CharField(max_length=50, blank=True, help_text='Example: Torani (Not Required)')
+    unit = models.CharField(max_length=50, help_text='Example: Strawberry (required)')
+    package = models.CharField(default='', blank=True, max_length=10, choices=[('box(es)', 'Box(es)'), ('case(s)', 'Case(s)'), ('carton(s)', 'Carton(s)'), ('pack(s)', 'Pack(s)')])
     package_qty = models.IntegerField(default=0, help_text='Quantity of unit per package')
     quota = models.IntegerField(default=0, help_text='The required minimum quantity when restocking has occurred')
     storage = models.CharField(max_length=2, choices=[('A', 'Shed'), ('B', 'Shop')])
