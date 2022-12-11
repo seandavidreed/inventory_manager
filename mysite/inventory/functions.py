@@ -81,7 +81,7 @@ def createPDF(order_number=None, supplier=None, orders=None):
     return buffer
 
 
-def createCSV(order_number=None, all_models=False):
+def createCSV(order_number=None, supplier=None, all_models=False):
     # Prepare httpresponse object to write csv file
     response = HttpResponse(
         content_type='text/csv',
@@ -89,7 +89,9 @@ def createCSV(order_number=None, all_models=False):
     )
 
     # order_number kwarg determines the scope of the order data to return
-    if order_number:
+    if order_number and supplier:
+        orders = Order.objects.filter(order_number=order_number, item__supplier__name=supplier).exclude(order_qty=0)
+    elif order_number:
         orders = Order.objects.filter(order_number=order_number)
     else:
         orders = Order.objects.all()

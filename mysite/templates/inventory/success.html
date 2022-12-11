@@ -9,6 +9,12 @@
         <div class="login d-flex row justify-content-center align-items-center">
             <div class="col-lg-4">
                 <h2>Orders Submitted Successfully</h2>
+                <form action="" method="post">
+                {% csrf_token %}
+                    {% for supplier in suppliers %}
+                        <button type="submit" name="supplier" value="{{ supplier }}" class="btn btn-outline-primary">{{ supplier }}</button>
+                    {% endfor %}
+                </form>
                 <a class="link-dark" href="{% url 'inventory:dashboard' %}"><button class="btn btn-outline-secondary">Return to Dashboard</button></a>
             </div>
         </div>

@@ -17,7 +17,7 @@ class Supplier(models.Model):
 
 
 class Item(models.Model):
-    supplier = models.ForeignKey(Supplier, on_delete=models.DO_NOTHING)
+    supplier = models.ForeignKey('Supplier', on_delete=models.DO_NOTHING)
     brand = models.CharField(max_length=50, blank=True, help_text='Example: Torani (Not Required)')
     unit = models.CharField(max_length=50, help_text='Example: Strawberry (required)')
     package = models.CharField(default='', blank=True, max_length=10, choices=[('box(es)', 'Box(es)'), ('case(s)', 'Case(s)'), ('carton(s)', 'Carton(s)'), ('pack(s)', 'Pack(s)')])
@@ -39,7 +39,7 @@ class Item(models.Model):
 
 
 class Order(models.Model):
-    item = models.ForeignKey(Item, on_delete=models.DO_NOTHING)
+    item = models.ForeignKey('Item', on_delete=models.DO_NOTHING)
     date = models.DateField()
     order_number = models.IntegerField(default=1, help_text='The unique value used to identify an order')
     order_qty = models.IntegerField(default=0, help_text='The amount of a given item to be ordered')

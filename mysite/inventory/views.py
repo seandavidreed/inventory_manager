@@ -35,7 +35,7 @@ def take_inventory(request):
             # If at least one item has a non-zero value, the order is valid
             if item_value != '0':
                 order_is_valid = True
-                request.session['suppliers'][item.supplier.name] = item.supplier.name
+                request.session['suppliers'][item.supplier.name] = (item.supplier.name, item.supplier.send_email)
 
             # Append order data to session 
             request.session['orders'].append((item.id, item_value))
@@ -47,7 +47,7 @@ def take_inventory(request):
             # If at least one item has a non-zero value, the order is valid
             if item_value != '0':
                 order_is_valid = True
-                request.session['suppliers'][item.supplier.name] = item.supplier.name
+                request.session['suppliers'][item.supplier.name] = (item.supplier.name, item.supplier.send_email)
 
             # Append order data to session 
             request.session['orders'].append((item.id, item_value))
@@ -65,7 +65,14 @@ def take_inventory(request):
 
 @login_required
 def finalize(request):
+    supplier_list = []
+    for key in request.session['suppliers']:
+        if request.session['suppliers'][key][1] is True:
+            supplier_list.append(request.session['suppliers'][key][0])
+
     if request.method == "POST":
+
+        request.session['csv'] = {}
 
         # Get most recent order number and add 1 for new order number
         try:
@@ -87,10 +94,10 @@ def finalize(request):
         for supplier in request.session['suppliers']:
             # Get data associated with supplier from supplier table (Email, Phone)
             supplier_info = Supplier.objects.get(name=supplier)
-            if supplier_info.send_email is True:
-                recipient = supplier_info.email
-            else:
-                recipient = user.email
+            if supplier_info.send_email is False:
+                request.session['csv'][supplier] = (order_number, supplier)
+                continue
+
             # Get email message addressed to supplier from post request
             message = request.POST[supplier]
             # Generate PDF with supplier's items of non-zero order_qty
@@ -103,12 +110,28 @@ def finalize(request):
                 subject='Order Form',
                 body=message,
                 from_email=user.email,
-                to=[recipient],
+                to=[supplier_info.email],
             )
             email.attach(supplier + '_order.pdf', pdf.getvalue(), 'application/pdf')
             email.send(fail_silently=False)
         return HttpResponseRedirect(reverse('inventory:success'))
-    return render(request, 'inventory/finalize.html', {'supplier_list': request.session['suppliers']})
+    return render(request, 'inventory/finalize.html', {'supplier_list': supplier_list})
+
+
+def success(request):
+    suppliers = []
+    csv = request.session['csv']
+    print(csv)
+
+    for key in csv:
+        suppliers.append(csv[key][1])
+
+    if request.method == "POST":
+        choice = request.POST['supplier']
+        file = createCSV(order_number=csv[choice][0], supplier=choice)
+        return file
+    return render(request, 'inventory/success.html', {'suppliers': suppliers})
+
 
 
 @login_required
