@@ -23,25 +23,13 @@ def take_inventory(request):
     item_list_shop = Item.objects.filter(storage='B')
 
     if request.method == "POST":
-        # Prepare to store orders temporarily in session, until validated and transferred to database
+        # Prepare to store orders and info in session
         request.session['orders'] = []
         request.session['suppliers'] = {}
         order_is_valid = False
 
-        # Get values from template form one at a time
-        for item in item_list_shed:
-            item_value = request.POST[str(item.id)]
-
-            # If at least one item has a non-zero value, the order is valid
-            if item_value != '0':
-                order_is_valid = True
-                request.session['suppliers'][item.supplier.name] = (item.supplier.name, item.supplier.send_email)
-
-            # Append order data to session 
-            request.session['orders'].append((item.id, item_value))
-
-        # Get values from template form one at a time
-        for item in item_list_shop:
+        # Get values from template form
+        for item in [*item_list_shed, *item_list_shop]:
             item_value = request.POST[str(item.id)]
 
             # If at least one item has a non-zero value, the order is valid
@@ -52,19 +40,20 @@ def take_inventory(request):
             # Append order data to session 
             request.session['orders'].append((item.id, item_value))
         
-        # Validate the order and clear session and redirect if invalid
         if not order_is_valid:
             del request.session['suppliers']
             del request.session['orders']
             return HttpResponseRedirect(reverse('inventory:empty_order'))
 
-        # Go to final ordering stage to send emails
         return HttpResponseRedirect(reverse('inventory:finalize'))
+
     return render(request, 'inventory/take-inventory.html', {'item_list_shed': item_list_shed, 'item_list_shop': item_list_shop})
 
 
 @login_required
 def finalize(request):
+
+    # Supplier send_email field is True, add them to the list
     supplier_list = []
     for key in request.session['suppliers']:
         if request.session['suppliers'][key][1] is True:
@@ -90,7 +79,7 @@ def finalize(request):
         # Get Administrator's Email Address
         user = User.objects.get(pk=1)
 
-        # Retrieve supplier data from session and generate email for each supplier
+        # Retrieve supplier data from session and generate email for each supplier where send_email = True
         for supplier in request.session['suppliers']:
             # Get data associated with supplier from supplier table (Email, Phone)
             supplier_info = Supplier.objects.get(name=supplier)
@@ -98,11 +87,9 @@ def finalize(request):
                 request.session['csv'][supplier] = (order_number, supplier)
                 continue
 
-            # Get email message addressed to supplier from post request
             message = request.POST[supplier]
-            # Generate PDF with supplier's items of non-zero order_qty
+
             pdf = createPDF(order_number=order_number, supplier=supplier)
-            # Handle function usage errors
             if pdf is None:
                 continue
             
@@ -114,15 +101,18 @@ def finalize(request):
             )
             email.attach(supplier + '_order.pdf', pdf.getvalue(), 'application/pdf')
             email.send(fail_silently=False)
+
         return HttpResponseRedirect(reverse('inventory:success'))
+
     return render(request, 'inventory/finalize.html', {'supplier_list': supplier_list})
 
 
 def success(request):
+
+    # Get suppliers where send_email = False
+    # Allow user to download their order info as csv
     suppliers = []
     csv = request.session['csv']
-    print(csv)
-
     for key in csv:
         suppliers.append(csv[key][1])
 
@@ -136,6 +126,8 @@ def success(request):
 
 @login_required
 def history(request, order=None):
+
+    # If number of orders exceeds 20, collapse the rest into an archive
     if order:
         latest_orders = Order.objects.filter(date__year=order).distinct().order_by('-order_number')
         archive = 0
@@ -171,7 +163,7 @@ def order(request, order_number):
 
 @login_required
 def analytics(request):
-    # Fetch all items from the database
+
     items = Item.objects.all().order_by('unit')
     product = '0'
     package = None
@@ -208,7 +200,6 @@ def analytics(request):
         orders = Order.objects.filter(date__range=(start_date, current_date)).values('date')\
             .annotate(sum=Sum('order_qty')).order_by('date')
 
-    # If there are no orders, redirect
     if not orders:
         return HttpResponseRedirect(reverse('inventory:nodata'))
     
