@@ -49,7 +49,7 @@ def createPDF(order_number=None, supplier=None, orders=None):
             textob.textLine("Order Placed: " + order_date)
             textob.textLine()
 
-            # Table Headers (currently hard-coded: probably should change)
+            # Table Headers
             textob.setFont("Courier-Bold", 12)
             textob.textOut("Item")
             textob.moveCursor(5*inch, 0)
@@ -60,7 +60,11 @@ def createPDF(order_number=None, supplier=None, orders=None):
 
         # Populate document with data from database
         textob.setFont("Courier", 12)
-        textob.textOut(str(order.item.brand + ' ' + order.item.unit))
+        if order.item.brand:
+            item_string = str(order.item.brand + ' ' + order.item.unit)
+        else:
+            item_string = str(order.item.unit)
+        textob.textOut(item_string)
         textob.moveCursor(5*inch, 0)
         textob.textOut(str(order.order_qty))
         textob.textOut(' ' + str(order.item.package))
