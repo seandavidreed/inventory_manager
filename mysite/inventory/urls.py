@@ -18,5 +18,5 @@ urlpatterns = [
     path('success/', views.success, name='success'),
     path('analytics/', views.analytics, name='analytics'),
     path('delete-everything/', views.delete, name='delete'),
-    path('csv/', views.alldata, name='alldata'),
+    path('csv/', views.alldata, name='all_data'),
 ]

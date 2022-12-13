@@ -12,10 +12,10 @@
     <div class="card card-body m-3">
         <ul class="list-group list-group-flush">
             <li class="list-group-item d-flex justify-content-center">
-                <a href="{% url 'inventory:alldata' %}"><button type="submit" name="csv" value="csv" class="btn btn-sm btn-info">Download All as CSV</button></a>
+                <a href="{% url 'inventory:all_data' %}"><button type="submit" name="csv" value="csv" class="btn btn-sm btn-info">Download All as CSV</button></a>
             </li>
             <li class="list-group-item d-flex justify-content-center">
-                <form action="{% url 'inventory:alldata' %}" enctype="multipart/form-data" method="post">
+                <form action="{% url 'inventory:all_data' %}" enctype="multipart/form-data" method="post">
                 {% csrf_token %}
                     {% if user.is_superuser %}
                     <div class="d-flex row justify-content-center">

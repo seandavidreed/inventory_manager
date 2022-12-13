@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
 
-from .models import Supplier, Item, Order
+from .models import Supplier, Item
 
 # Register your models here.
 class SupplierAdmin(admin.ModelAdmin):

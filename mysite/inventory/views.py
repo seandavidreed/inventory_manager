@@ -256,7 +256,7 @@ def delete(request):
     return render(request, 'inventory/delete.html')
 
 
-def alldata(request):
+def all_data(request):
     if request.method == "POST":
         fileitem = request.FILES['csv_file']
         readCSV(fileitem)
