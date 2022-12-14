@@ -2,8 +2,9 @@ import io
 from reportlab.pdfgen import canvas
 from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import letter
+from reportlab.lib.colors import lightskyblue, black
 
-from django.http import HttpResponse, FileResponse
+from django.http import HttpResponse
 import csv, re
 
 import datetime
@@ -32,31 +33,38 @@ def createPDF(order_number=None, supplier=None, orders=None):
     # Create a canvas
     p = canvas.Canvas(buffer, pagesize=letter, bottomup=0)
 
-    for order in orders:
+    for index, order in enumerate(orders):
         if b is True:
             # Create a text object
+            p.setFillColor(black)
             textob = p.beginText()
             textob.setTextOrigin(inch, inch)
 
             # Create Letterhead
-            textob.setFont("Courier", 18)
+            textob.setFont("Helvetica", 18)
             textob.textLine("Woodland Espresso")
             p.setLineWidth(0.05*inch)
             p.line(1*inch, 1.1*inch, 7.5*inch, 1.1*inch)
 
             # Display order date
-            textob.setFont("Courier", 12)
+            textob.setFont("Helvetica", 12)
             textob.textLine("Order Placed: " + order_date)
             textob.textLine()
 
             # Table Headers
-            textob.setFont("Courier-Bold", 12)
+            textob.setFont("Helvetica-Bold", 12)
             textob.textOut("Item")
-            textob.moveCursor(5*inch, 0)
+            textob.moveCursor(5.5*inch, 0)
             textob.textOut("Order Qty")
-            textob.moveCursor(-5*inch, 0)
+            textob.moveCursor(-5.5*inch, 0)
             textob.textLine()
             b = False
+
+        # Create blue striping on every other line
+        if index % 2 == 0:
+            p.setFillColor(lightskyblue, alpha=0.3)
+            p.rect(textob.getX(), textob.getY() - 10.5, height=14.5, width=6.5*inch, fill=1, stroke=False)
+        p.setFillColor(black)
 
         # Populate document with data from database
         textob.setFont("Courier", 12)
@@ -65,10 +73,10 @@ def createPDF(order_number=None, supplier=None, orders=None):
         else:
             item_string = str(order.item.unit)
         textob.textOut(item_string)
-        textob.moveCursor(5*inch, 0)
+        textob.moveCursor(5.5*inch, 0)
         textob.textOut(str(order.order_qty))
         textob.textOut(' ' + str(order.item.package))
-        textob.moveCursor(-5*inch, 0)
+        textob.moveCursor(-5.5*inch, 0)
         textob.textLine()
         if textob.getCursor()[1] >= 712:
             b = True
