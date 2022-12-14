@@ -2,16 +2,16 @@
 
 ## Table of Contents:
 
-    1.[Video](#video-url)
-    2. [Description](#description)
-        - [models.py](#modelspy)
-        - [views.py](#viewspy)
-        - [urls.py](#urlspy)
-        - [functions.py](#functionspy)
-        - [static/](#static)
-        - [templates/](#templates)
-    3. [Dependencies](#dependencies)
-    4. [Testing the App](#testing-the-app)
+    1.[Video](# video)
+    2. [Description](# description)
+        - [models.py](# modelspy)
+        - [views.py](# viewspy)
+        - [urls.py](# urlspy)
+        - [functions.py](# functionspy)
+        - [static/](# static)
+        - [templates/](# templates)
+    3. [Dependencies](# dependencies)
+    4. [Testing the App](# testing-the-app)
 
 ### Video: `<URL>`
 
