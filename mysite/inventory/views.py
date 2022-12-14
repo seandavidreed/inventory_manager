@@ -12,7 +12,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from .models import Supplier, Item, Order
-from .functions import createPDF, createCSV, readCSV
+from .functions import create_pdf, create_csv, read_csv
 
 # Create your views here.
 @login_required
@@ -47,7 +47,7 @@ def take_inventory(request):
 
         return HttpResponseRedirect(reverse('inventory:finalize'))
 
-    return render(request, 'inventory/take-inventory.html', {'item_list_shed': item_list_shed, 'item_list_shop': item_list_shop})
+    return render(request, 'inventory/take_inventory.html', {'item_list_shed': item_list_shed, 'item_list_shop': item_list_shop})
 
 
 @login_required
@@ -89,7 +89,7 @@ def finalize(request):
 
             message = request.POST[supplier]
 
-            pdf = createPDF(order_number=order_number, supplier=supplier)
+            pdf = create_pdf(order_number=order_number, supplier=supplier)
             if pdf is None:
                 continue
             
@@ -118,7 +118,7 @@ def success(request):
 
     if request.method == "POST":
         choice = request.POST['supplier']
-        file = createCSV(order_number=csv[choice][0], supplier=choice)
+        file = create_csv(order_number=csv[choice][0], supplier=choice)
         return file
     return render(request, 'inventory/success.html', {'suppliers': suppliers})
 
@@ -136,9 +136,9 @@ def history(request, order=None):
         archive = Order.objects.all().values('date__year').distinct().order_by('-order_number')[20:]
 
     if request.method == "POST":
-        return createCSV()
+        return create_csv()
 
-    return render(request, 'inventory/order-history.html', {'latest_orders': latest_orders, 'archive': archive})
+    return render(request, 'inventory/order_history.html', {'latest_orders': latest_orders, 'archive': archive})
 
 
 @login_required
@@ -153,9 +153,9 @@ def order(request, order_number):
 
     if request.method == "POST":
         if request.POST.get('csv'):
-            return createCSV(order_number)
+            return create_csv(order_number)
         else:
-            pdf = createPDF(orders=orders)
+            pdf = create_pdf(orders=orders)
             return FileResponse(pdf, as_attachment=True, filename=str(orders[0].date) + '_order_' + order_number  + '.pdf')
 
     return render(request, 'inventory/order.html', {'orders': orders})
@@ -249,7 +249,7 @@ def delete(request):
             Order.objects.all().delete()
             Item.objects.all().delete()
             Supplier.objects.all().delete()
-            return HttpResponseRedirect(reverse('inventory:delete-occurred'))
+            return HttpResponseRedirect(reverse('inventory:delete_occurred'))
         
         return HttpResponseRedirect(reverse('inventory:dashboard'))
 
@@ -259,6 +259,6 @@ def delete(request):
 def all_data(request):
     if request.method == "POST":
         fileitem = request.FILES['csv_file']
-        readCSV(fileitem)
+        read_csv(fileitem)
         return HttpResponseRedirect(reverse('inventory:dashboard'))
-    return createCSV(all_models=True)
+    return create_csv(all_models=True)

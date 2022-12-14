@@ -11,7 +11,7 @@ import datetime
 
 from .models import Supplier, Item, Order
 
-def createPDF(order_number=None, supplier=None, orders=None):
+def create_pdf(order_number=None, supplier=None, orders=None):
     # Order Number and Supplier arguments are provided when function is used to attach PDF to email.
     # Orders argument is provided when function is used to download order history.
     # If function is used improperly, an exception is raised
@@ -93,7 +93,7 @@ def createPDF(order_number=None, supplier=None, orders=None):
     return buffer
 
 
-def createCSV(order_number=None, supplier=None, all_models=False):
+def create_csv(order_number=None, supplier=None, all_models=False):
 
     # order_number kwarg determines the scope of the order data to return
     if order_number and supplier:
@@ -141,7 +141,7 @@ def createCSV(order_number=None, supplier=None, all_models=False):
     return response
 
 
-def readCSV(fileitem):
+def read_csv(fileitem):
 
     fileitem.seek(0)
     fileitem = fileitem.read().decode('utf-8')

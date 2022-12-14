@@ -22,7 +22,7 @@
           <div class="navbar-nav">
             {% if user.is_authenticated %}
               <!--<a class="nav-link" href="{% url 'inventory:dashboard' %}">Dashboard</a-->
-              <a class="nav-link toggle" href="{% url 'inventory:take-inventory' %}" style="display: none;">Inventory</a>
+              <a class="nav-link toggle" href="{% url 'inventory:take_inventory' %}" style="display: none;">Inventory</a>
               <a class="nav-link toggle" href="{% url 'inventory:history' %}" style="display: none;">History</a>
               <a class="nav-link toggle" href="{% url 'inventory:analytics' %}" style="display: none;">Analytics</a>
               <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>

@@ -1,5 +1,18 @@
 # INVENTORY MANAGER
 
+## Table of Contents:
+
+    1.[Video](#video-url)
+    2. [Description](#description)
+        - [models.py](#modelspy)
+        - [views.py](#viewspy)
+        - [urls.py](#urlspy)
+        - [functions.py](#functionspy)
+        - [static/](#static)
+        - [templates/](#templates)
+    3. [Dependencies](#dependencies)
+    4. [Testing the App](#testing-the-app)
+
 ### Video: `<URL>`
 
 ### Description:
@@ -40,4 +53,40 @@ The static folder contains a small styles.css file, images, and jive.js [RENAME]
 
 I relied mainly on Bootstrap 5 for the styling of my templates. I wanted Bootstrap's navigation bar and table aesthetics. Since the app is mainly expected to be used on mobile, I needed the navigation bar to be very responsive; Bootstrap has a class, "navbar-collapse", that puts all the navigation links in a dropdown menu once the viewport width reaches a certain breakpoint. Furthermore, Bootstrap's table classes are elegant and simple; considering they make up the whole take-inventory and history templates, the tables needed to be easy to use and clean looking.
 
-### Testing
+### Dependencies
+
+```
+pip install django
+pip install django-environ
+pip install plotly
+pip install pandas
+```
+
+### Testing the App
+
+```
+mkdir inventory_manager
+cd inventory_manager
+
+git clone https://github.com/seandavidreed/inventory_manager.git
+
+# install dependencies if you haven't already
+pip install django
+pip install django-environ
+pip install plotly
+pip install pandas
+
+# execute command in the same directory as manage.py
+# ctrl click http://127.0.0.1:8000/
+python3 manage.py runserver
+
+# in the browser, login with these test credentials
+# username: root
+# password: 12345678*
+
+# navigate to admin in the upper righthand corner
+# select users, then root, and update email field to valid address
+# select Suppliers and update each email field to valid address
+
+# all set!
+```
