@@ -94,19 +94,23 @@ def createPDF(order_number=None, supplier=None, orders=None):
 
 
 def createCSV(order_number=None, supplier=None, all_models=False):
-    # Prepare httpresponse object to write csv file
-    response = HttpResponse(
-        content_type='text/csv',
-        headers={'Content-Disposition': 'attachment; filename="history.csv"'}
-    )
 
     # order_number kwarg determines the scope of the order data to return
     if order_number and supplier:
         orders = Order.objects.filter(order_number=order_number, item__supplier__name=supplier).exclude(order_qty=0)
+        content_disposition = 'attachment; filename={date}_order_{number}.csv'.format(date=orders[0].date, number=order_number)
     elif order_number:
         orders = Order.objects.filter(order_number=order_number)
+        content_disposition = 'attachment; filename={date}_order_{number}.csv'.format(date=orders[0].date, number=order_number)
     else:
         orders = Order.objects.all()
+        content_disposition = 'attachment; filename=all_data.csv'
+
+    # Prepare httpresponse object to write csv file
+    response = HttpResponse(
+        content_type='text/csv',
+        headers={'Content-Disposition': content_disposition}
+    )
 
     # Prepare writer object
     writer = csv.writer(response)

@@ -156,7 +156,7 @@ def order(request, order_number):
             return createCSV(order_number)
         else:
             pdf = createPDF(orders=orders)
-            return FileResponse(pdf, as_attachment=True, filename='order.pdf')
+            return FileResponse(pdf, as_attachment=True, filename=str(orders[0].date) + '_order_' + order_number  + '.pdf')
 
     return render(request, 'inventory/order.html', {'orders': orders})
 

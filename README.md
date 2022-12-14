@@ -39,3 +39,5 @@ The static folder contains a small styles.css file, images, and jive.js [RENAME]
 ###### templates/
 
 I relied mainly on Bootstrap 5 for the styling of my templates. I wanted Bootstrap's navigation bar and table aesthetics. Since the app is mainly expected to be used on mobile, I needed the navigation bar to be very responsive; Bootstrap has a class, "navbar-collapse", that puts all the navigation links in a dropdown menu once the viewport width reaches a certain breakpoint. Furthermore, Bootstrap's table classes are elegant and simple; considering they make up the whole take-inventory and history templates, the tables needed to be easy to use and clean looking.
+
+### Testing
