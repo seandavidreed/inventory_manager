@@ -12,9 +12,12 @@
                 <h2>Orders Submitted Successfully</h2>
                 <form action="" method="post">
                 {% csrf_token %}
-                    {% for supplier in suppliers %}
-                        <button type="submit" name="supplier" value="{{ supplier }}" class="btn btn-outline-primary">{{ supplier }}</button>
-                    {% endfor %}
+                    <div class="card card-body m-3"
+                        <h3 class="card-title">Download CSV</h3>
+                        {% for supplier in suppliers %}
+                            <button type="submit" name="supplier" value="{{ supplier }}" class="btn btn-outline-primary m-3">{{ supplier }}</button>
+                        {% endfor %}
+                    </div>
                 </form>
                 <a class="link-dark" href="{% url 'inventory:dashboard' %}"><button class="btn btn-outline-secondary">Return to Dashboard</button></a>
             </div>

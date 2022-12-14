@@ -164,28 +164,16 @@ def readCSV(fileitem):
         
         if active_table == 0:
             new_supplier = Supplier(name=fields[0], email=fields[1], send_email=fields[2], phone=fields[3])
-            new_item = Item(supplier=new_supplier)
             new_supplier.save()
-            new_item.save()
         elif active_table == 1:
-            item = Item.objects.get(supplier__name=fields[0])
-            item.brand = fields[1]
-            item.unit = fields[2]
-            item.package = fields[3]
-            item.package_qty = fields[4]
-            item.quota = fields[5]
-            item.storage = fields[6]
-            item.latest_qty = fields[7]
-            new_order = Order(item=item, date=datetime.datetime.now())
-            item.save()
-            new_order.save()
+            supplier = Supplier.objects.get(name=fields[0])
+            new_item = Item(supplier=supplier, brand=fields[1], unit=fields[2], package=fields[3], \
+                package_qty=fields[4], quota=fields[5], storage=fields[6], latest_qty=fields[7])     
+            new_item.save()
         else:
-            print(fields[2])
-            order = Order.objects.get(item__id=item.id)
+            item = Item.objects.get(brand=fields[0], unit=fields[1])
             date = datetime.datetime.strptime(fields[2], "%Y-%m-%d")
-            order.date = datetime.date.strftime(date, "%Y-%m-%d")
-            order.order_number = fields[3]
-            order.order_qty = fields[4]
-            order.save()
+            new_order = Order(item=item, date=datetime.date.strftime(date, "%Y-%m-%d"), order_number=fields[3], order_qty=fields[4])
+            new_order.save()
             
     return None
