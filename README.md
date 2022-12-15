@@ -3,7 +3,7 @@
 ## Table of Contents:
 
     1.[Video](# video)
-    2. [Description](# description)
+    2. [Description](https://github.com/seandavidreed/inventory_manager#description)
         - [models.py](# modelspy)
         - [views.py](# viewspy)
         - [urls.py](# urlspy)
@@ -15,7 +15,7 @@
 
 ### Video: `<URL>`
 
-### Description:
+### Description
 
 ###### Introduction
 
@@ -47,7 +47,7 @@ I created the file functions.py to clean up the views.py file. I wrote three fun
 
 ###### static/
 
-The static folder contains a small styles.css file, images, and jive.js [RENAME]. In styles.css, I created a custom class selector called login, which is mainly for the purpose of substracting the height of the navbar from the total viewheight. I accomplished this with the calc() function. The JavaScript file contains three functions: increment, check_qty, and toggle_display. The increment function controls the plus and minus buttons in the take-inventory template (the button tag selector in styles.css solves the problem of the screen zooming when the user presses the increment and decrement buttons on a touch screen).
+The static folder contains a small styles.css file, images, and scripts.js. In styles.css, I created a custom class selector called login, which is mainly for the purpose of substracting the height of the navbar from the total viewheight. I accomplished this with the calc() function. The JavaScript file contains three functions: increment, check_qty, and toggle_display. The increment function controls the plus and minus buttons in the take-inventory template (the button tag selector in styles.css solves the problem of the screen zooming when the user presses the increment and decrement buttons on a touch screen).
 
 ###### templates/
 
