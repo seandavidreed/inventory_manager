@@ -129,10 +129,10 @@ def history(request, order=None):
 
     # If number of orders exceeds 20, collapse the rest into an archive
     if order:
-        latest_orders = Order.objects.filter(date__year=order).distinct().order_by('-order_number')
+        latest_orders = Order.objects.values('date', 'order_number').filter(date__year=order).distinct().order_by('-order_number')
         archive = 0
     else:
-        latest_orders = Order.objects.all().values('date', 'order_number').distinct().order_by('-order_number')[:20]
+        latest_orders = Order.objects.values('date', 'order_number').distinct().order_by('-order_number')[:20]
         archive = Order.objects.all().values('date__year').distinct().order_by('-order_number')[20:]
 
     if request.method == "POST":

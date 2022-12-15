@@ -10,7 +10,7 @@ media
 # Backup files #
 *.bak
 
-#For Email and SECRET_KEY (UNCOMMENT .env WHEN SHIPPING APP)
-#.env
+#For Email and SECRET_KEY
+.env
 
 

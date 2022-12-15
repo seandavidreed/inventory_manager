@@ -37,7 +37,6 @@
                         <input type="hidden" name="next" value="{{ next }}">
                     </div>
                 </form>
-                <!--Assumes you set of the password_reset view in your URLconf-->
                 <p><a class="link-light" href="{% url 'admin:index' %}">Login As Admin</a></p>
                 <p><a class="link-light" href="{% url 'password_reset' %}">Forgot Password</a></p>
             </div>

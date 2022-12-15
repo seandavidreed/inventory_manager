@@ -23,7 +23,7 @@
                 {% endfor %}
             </table>
             {% if archive %}
-                    <a href="{% url 'inventory:archive' %}"><button class="btn btn-outline-danger">Archive</button></a>
+                    <a href="{% url 'inventory:archive' %}"><button class="btn btn-outline-danger m-3">Archive</button></a>
                 {% endif %}
             {% if not latest_orders %}
                 <p>No orders to display.</p>
