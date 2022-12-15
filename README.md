@@ -3,7 +3,7 @@
 ## Table of Contents:
 
     1.[Video](# video)
-    2. [Description](/inventory_manager/README.md#description)
+    2. [Description](/inventory_manager#description)
         - [models.py](# modelspy)
         - [views.py](# viewspy)
         - [urls.py](# urlspy)
