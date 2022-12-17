@@ -2,8 +2,6 @@
 
 ## Table of Contents
 
-[Video](#video)
-
 [Description](#description)
 - [models.py](#modelspy)
 - [views.py](#viewspy)
@@ -12,6 +10,8 @@
 - [static/](#static)
 - [templates/](#templates)
 
+[Video Demonstration](#video-demonstration)
+
 [Dependencies](#dependencies)
 
 [Testing the App](#testing-the-app)
@@ -19,8 +19,6 @@
 - [Authorize Gmail Access](#authorize-inventory-manager-to-access-gmail)
 - [Generate A Secret Key](#generate-a-secret-key)
 - [Putting It All Together](#putting-it-all-together)
-
-## Video: <URL>
 
 ## Description
 
@@ -52,6 +50,9 @@ The static folder contains a small styles.css file, images, and scripts.js. In s
 
 #### templates/
 I relied mainly on Bootstrap 5 for the styling of my templates. I wanted Bootstrap's navigation bar and table aesthetics. Since the app is mainly expected to be used on mobile, I needed the navigation bar to be very responsive; Bootstrap has a class, "navbar-collapse", that puts all the navigation links in a dropdown menu once the viewport width reaches a certain breakpoint. Furthermore, Bootstrap's table classes are elegant and simple; considering they make up the whole take-inventory and history templates, the tables needed to be easy to use and clean looking.
+
+## Video Demonstration
+Click [here](https://youtu.be/azkM0cNkFGo) for a quick tour of the app!
 
 ## Dependencies
 

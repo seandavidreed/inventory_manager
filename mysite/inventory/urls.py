@@ -9,6 +9,7 @@ urlpatterns = [
     path('empty_order/', TemplateView.as_view(template_name='inventory/empty_order.html'), name='empty_order'),
     path('delete_occurred/', TemplateView.as_view(template_name='inventory/delete_occurred.html'), name='delete_occurred'),
     path('no_data/', TemplateView.as_view(template_name='inventory/no_data.html'), name='no_data'),
+    path('email_error/', TemplateView.as_view(template_name='inventory/email_error.html'), name='email_error'),
     path('order_history/', views.history, name='history'),
     path('order_history/<str:order_number>/', views.order, name='order'),
     path('archive/', views.archive, name='archive'),

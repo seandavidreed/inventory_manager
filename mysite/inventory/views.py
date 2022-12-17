@@ -100,7 +100,10 @@ def finalize(request):
                 to=[supplier_info.email],
             )
             email.attach(supplier + '_order.pdf', pdf.getvalue(), 'application/pdf')
-            email.send(fail_silently=False)
+            try:
+                email.send(fail_silently=False)
+            except:
+                return HttpResponseRedirect(reverse('inventory:email_error'))
 
         return HttpResponseRedirect(reverse('inventory:success'))
 
