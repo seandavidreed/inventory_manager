@@ -61,6 +61,7 @@ pip install django
 pip install django-environ
 pip install plotly
 pip install pandas
+pip install reportlab
 ```
 
 ## Testing the App
@@ -76,6 +77,7 @@ pip install django
 pip install django-environ
 pip install plotly
 pip install pandas
+pip install reportlab
 
 # execute command in the same directory as manage.py
 # ctrl click http://127.0.0.1:8000/
