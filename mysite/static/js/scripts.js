@@ -9,7 +9,7 @@ function toggle_row(row, button, increment, input) {
         increment[0].style.display = "none";
         increment[1].style.display = "none";
         input.style.color = "#000000";
-        input.setAttribute("disabled", "");
+        input.readOnly = true;
     }
     else {
         row.style.backgroundColor = "#FFFFFF";
@@ -17,7 +17,7 @@ function toggle_row(row, button, increment, input) {
         increment[0].style.display = "block";
         increment[1].style.display = "block";
         input.style.color = "#CCCCCC";
-        input.removeAttribute("disabled");
+        input.readOnly = false;
     }
     
 }
@@ -50,4 +50,17 @@ function toggle_display(page) {
             elements[i].style.display = "block";
         }
     }
+}
+
+function validateForm() {
+    var form = document.forms["myForm"]["validate"];
+
+    for (let i = 0; i < form.length; i++) {
+        if (form[i].value == "false") {
+            alert("Please confirm each inventory item.");
+            return false;
+        }
+    }
+
+    return true;
 }

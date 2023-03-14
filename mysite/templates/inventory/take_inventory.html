@@ -8,7 +8,7 @@
     <script>toggle_display("Inventory")</script>
     <div class="row justify-content-center py-5">
         <div class="col-lg-6">
-            <form action="" method="post">
+            <form action="" method="post" name="myForm" onsubmit="return(validateForm());" required>
             {% csrf_token %}
             <table class="table">
                 <thead>
@@ -24,7 +24,7 @@
                 </thead>
                 {% for item in item_list_shop %}
                     <tr id="shop_{{ item.id }}">
-                        <td class="align-middle"><button id="btn_{{ item.id }}" value="false" style="border: none; background: none;" type="button" onclick="toggle_row('shop_{{ item.id }}', 'btn_{{ item.id }}', 'increment_{{ item.id }}', '{{ item.id }}')">{{ item.brand }} {{ item.unit }}</button></td>
+                        <td class="align-middle"><button id="btn_{{ item.id }}" name="validate" value="false" style="color: #000000; border: none; background: none;" type="button" onclick="toggle_row('shop_{{ item.id }}', 'btn_{{ item.id }}', 'increment_{{ item.id }}', '{{ item.id }}')">{{ item.brand }} {{ item.unit }}</button></td>
                         <td class="align-middle">{{ item.quota }} {{ item.package }}</td>
                         <td class="justify-content-center align-middle">
                             <input id="{{ item.id }}" type="text" style="max-width: 60px; color: #AAAAAA;" name="{{ item.id }}" class="form-control" value="{{ item.latest_qty }}" aria-label="Number of items to order">
@@ -55,16 +55,16 @@
                 </thead>
 
             {% for item in item_list_shed %}
-                <tr>
-                    <td class="align-middle">{{ item.brand }} {{ item.unit }}</td>
+                <tr id="shed_{{ item.id }}">
+                    <td class="align-middle"><button id="btn2_{{ item.id }}" name="validate" value="false" style="color: #000000; border: none; background: none;" type="button" onclick="toggle_row('shed_{{ item.id }}', 'btn2_{{ item.id }}', 'increment2_{{ item.id }}', '{{ item.id }}')">{{ item.brand }} {{ item.unit }}</button></td>
                     <td class="align-middle">{{ item.quota }} {{ item.package }}</td>
                     <td class="align-middle">
                         <input id="{{ item.id }}" type="text" style="max-width: 60px; color: #AAAAAA;" name="{{ item.id }}" class="form-control" value="{{ item.latest_qty }}" aria-label="Number of items to order">
                     </td>
                     <td class="align-middle">
                         <div class="btn-group d-flex flex-nowrap" role="group" aria-label="Small button group">
-                            <button class="btn btn-danger" type="button" onclick="increment('{{ item.id }}', 'd')">-</button>
-                            <button class="btn btn-success" type="button" onclick="increment('{{ item.id }}', 'i')">+</button>
+                            <button class="btn btn-danger increment2_{{ item.id }}" type="button" onclick="increment('{{ item.id }}', 'd')">-</button>
+                            <button class="btn btn-success increment2_{{ item.id }}" type="button" onclick="increment('{{ item.id }}', 'i')">+</button>
                         </div>
                     </td>
                 </tr>
