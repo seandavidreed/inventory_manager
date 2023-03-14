@@ -3,6 +3,8 @@ from django.db import models
 from django.db.models import Q
 from django.db.models.functions import Length
 
+from admin_ordering.models import OrderableModel
+
 models.CharField.register_lookup(Length)
 
 # Create your models here.
@@ -16,7 +18,7 @@ class Supplier(models.Model):
         return self.name
 
 
-class Item(models.Model):
+class Item(OrderableModel):
     supplier = models.ForeignKey('Supplier', on_delete=models.DO_NOTHING)
     brand = models.CharField(max_length=50, blank=True, help_text='Example: Torani (Not Required)')
     unit = models.CharField(max_length=50, help_text='Example: Strawberry (required)')
@@ -26,7 +28,7 @@ class Item(models.Model):
     storage = models.CharField(max_length=2, choices=[('A', 'Shed'), ('B', 'Shop')])
     latest_qty = models.IntegerField(default=0, editable=False, help_text='The last quantity ordered')
 
-    class Meta:
+    class Meta(OrderableModel.Meta):
         constraints = [
             models.CheckConstraint(
                 check=(Q(package__length=0, package_qty=0) | Q(package__length__gt=0, package_qty__gt=0)), 

@@ -35,7 +35,7 @@ def take_inventory(request):
             # If at least one item has a non-zero value, the order is valid
             if item_value != '0':
                 order_is_valid = True
-                request.session['suppliers'][item.supplier.name] = (item.supplier.name, item.supplier.send_email)
+                request.session['suppliers'][item.supplier.name] = (item.supplier.name, item.supplier.email, item.supplier.send_email)
 
             # Append order data to session 
             request.session['orders'].append((item.id, item_value))
@@ -54,10 +54,11 @@ def take_inventory(request):
 def finalize(request):
 
     # Supplier send_email field is True, add them to the list
+    session_data = request.session['suppliers']
     supplier_list = []
-    for key in request.session['suppliers']:
-        if request.session['suppliers'][key][1] is True:
-            supplier_list.append(request.session['suppliers'][key][0])
+    for key in session_data:
+        if session_data[key][2] is True:
+            supplier_list.append(session_data[key][0:2])
 
     if request.method == "POST":
 
@@ -80,7 +81,7 @@ def finalize(request):
         user = User.objects.get(pk=1)
 
         # Retrieve supplier data from session and generate email for each supplier where send_email = True
-        for supplier in request.session['suppliers']:
+        for supplier in session_data:
             # Get data associated with supplier from supplier table (Email, Phone)
             supplier_info = Supplier.objects.get(name=supplier)
             if supplier_info.send_email is False:
@@ -146,7 +147,7 @@ def history(request, order=None):
 
 @login_required
 def archive(request):
-    orders = Order.objects.all().values_list('date__year', flat=True).distinct()
+    orders = Order.objects.all().values_list('date__year', flat=True).distinct().order_by('-date__year')
     return render(request, 'inventory/archive.html', {'orders': orders})
 
 

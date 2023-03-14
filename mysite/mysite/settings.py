@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'inventory.apps.InventoryConfig',
+    'admin_ordering',
 ]
 
 MIDDLEWARE = [

@@ -10,7 +10,9 @@
             <form action="" method="post">
             {% csrf_token %}
                 {% for supplier in supplier_list %}
-                    <p>{{ supplier }}</p>
+                    {% for data in supplier %}
+                        <p>{{ data }}</p>
+                    {% endfor %}
                     <!--OPTIONAL MESSAGE TO SUPPLIER-->
                     <div class="form-floating mb-3">
                         <textarea class="form-control" placeholder="Enter optional message here" id="send_message" name="{{ supplier }}" style="height: 200px"></textarea>
