@@ -35,7 +35,7 @@ def take_inventory(request):
             # If at least one item has a non-zero value, the order is valid
             if item_value != '0':
                 order_is_valid = True
-                request.session['suppliers'][item.supplier.name] = (item.supplier.name, item.supplier.email, item.supplier.send_email)
+                request.session['suppliers'][item.supplier.name] = item.supplier.name
 
             # Append order data to session 
             request.session['orders'].append((item.id, item_value))
@@ -56,9 +56,10 @@ def finalize(request):
     # Supplier send_email field is True, add them to the list
     session_data = request.session['suppliers']
     supplier_list = []
-    for key in session_data:
-        if session_data[key][2] is True:
-            supplier_list.append(session_data[key][0:2])
+    for supplier_name in session_data:
+        supplier = Supplier.objects.get(name=supplier_name)
+        if supplier.send_email is True:
+            supplier_list.append(supplier)
 
     if request.method == "POST":
 
@@ -81,16 +82,16 @@ def finalize(request):
         user = User.objects.get(pk=1)
 
         # Retrieve supplier data from session and generate email for each supplier where send_email = True
-        for supplier in session_data:
+        for supplier_name in session_data:
             # Get data associated with supplier from supplier table (Email, Phone)
-            supplier_info = Supplier.objects.get(name=supplier)
+            supplier_info = Supplier.objects.get(name=supplier_name)
             if supplier_info.send_email is False:
-                request.session['csv'][supplier] = (order_number, supplier)
+                request.session['csv'][supplier_name] = (order_number, supplier_name)
                 continue
 
-            message = request.POST[supplier]
+            message = request.POST[supplier_name]
 
-            pdf = create_pdf(order_number=order_number, supplier=supplier)
+            pdf = create_pdf(order_number=order_number, supplier=supplier_name)
             if pdf is None:
                 continue
             
@@ -99,6 +100,7 @@ def finalize(request):
                 body=message,
                 from_email=user.email,
                 to=[supplier_info.email],
+                bcc=[user.email],
             )
             email.attach(supplier + '_order.pdf', pdf.getvalue(), 'application/pdf')
             try:

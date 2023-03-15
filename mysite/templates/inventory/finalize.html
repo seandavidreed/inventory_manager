@@ -3,19 +3,18 @@
 {% block title %}
     Finalize
 {% endblock %}
-
+1234567890
 {% block main %}
     <div class="row justify-content-center py-5">
         <div class="col-lg-6">
             <form action="" method="post">
             {% csrf_token %}
                 {% for supplier in supplier_list %}
-                    {% for data in supplier %}
-                        <p>{{ data }}</p>
-                    {% endfor %}
+                    <p>{{ supplier.name }}</p>
+                    <p>{{ supplier.email }}</p>
                     <!--OPTIONAL MESSAGE TO SUPPLIER-->
                     <div class="form-floating mb-3">
-                        <textarea class="form-control" placeholder="Enter optional message here" id="send_message" name="{{ supplier }}" style="height: 200px"></textarea>
+                        <textarea class="form-control" placeholder="Enter optional message here" id="send_message" name="{{ supplier }}" style="height: 200px">{{ supplier.default_message }}</textarea>
                         <label for="send_message">Message</label>
                     </div>
                 {% endfor %}

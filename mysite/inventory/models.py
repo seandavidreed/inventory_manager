@@ -11,6 +11,7 @@ models.CharField.register_lookup(Length)
 class Supplier(models.Model):
     name = models.CharField(max_length=50, help_text='Example: Dillanos')
     email = models.EmailField(max_length=100)
+    default_message = models.CharField(default='', max_length=250, help_text='Example: Here\'s our order for today. Thank you!')
     send_email = models.BooleanField(default=True, help_text='Set "True" if you want orders to be sent to supplier email')
     phone = models.CharField(max_length=20, help_text='Preferred format: 111-222-3333')
 
