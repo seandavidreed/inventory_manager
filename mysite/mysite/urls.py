@@ -18,6 +18,10 @@ from django.urls import include, path
 from django.views.generic import RedirectView
 from django.conf import settings
 from django.conf.urls.static import static
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
 
 urlpatterns = [
     path('admin/', admin.site.urls),

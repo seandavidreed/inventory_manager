@@ -102,7 +102,7 @@ def finalize(request):
                 to=[supplier_info.email],
                 bcc=[user.email],
             )
-            email.attach(supplier + '_order.pdf', pdf.getvalue(), 'application/pdf')
+            email.attach(supplier_name + '_order.pdf', pdf.getvalue(), 'application/pdf')
             try:
                 email.send(fail_silently=False)
             except:
